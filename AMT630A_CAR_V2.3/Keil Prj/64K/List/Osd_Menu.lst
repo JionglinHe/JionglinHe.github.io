@@ -1,15 +1,14 @@
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 1   
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE OSD_MENU
+C51 COMPILER V9.00, COMPILATION OF MODULE OSD_MENU
 OBJECT MODULE PLACED IN ..\Hex\Osd_Menu.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_Menu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\OSD;
-                    -..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;.
-                    -.\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetU
-                    -serInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device drive
-                    -r\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt
-                    -0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_Menu.lst) OBJECT(..\Hex\Osd_Menu.ob
-                    -j)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\OSD\Osd_Menu.c BROWSE INCDIR(..\..\..\OSD;..\..\..\OSD
+                    -\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\..\..\LCD 
+                    -Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUserInput\GPI
+                    -O;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\Flash;..\.
+                    -.\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0803l;..\..\
+                    -..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_Menu.lst) OBJECT(..\Hex\Osd_Menu.obj)
 
 line level    source
 
@@ -18,8 +17,6 @@ line level    source
    3          #include "DataType.h"
    4          #include "SystemConfig.h"
    5          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
    6          #include "MsgMap.h"
    7          #include "sysWorkPara.h"
    8          #include "sysPower.h" 
@@ -62,11 +59,11 @@ line level    source
                                               {                                 
                                                  if(inputPress == g_UserInputInfo.Status)
                                                  { 
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 2   
-
                                                        SetBuzzerOn();
                                                  }
                                           }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 2   
+
                                       }
                                   #endif
   53   2                      break;
@@ -126,11 +123,11 @@ line level    source
  107   2                      break;
  108   2                              
  109   2                 case MSG_UPK_MENU:
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 3   
-
  110   2                          printfStr("MSG_UPK_MENU");
  111   2      
  112   2                              #ifdef BuzzerEn
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 3   
+
                                       if(g_UserInputInfo.Type & KeyType)
                                       {
                                               if(IsPowerOn())  
@@ -190,11 +187,11 @@ line level    source
                                       {
                                               if(IsPowerOn())  
                                               {                                 
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 4   
-
                                                  if(inputPress == g_UserInputInfo.Status)
                                                  { 
                                                        SetBuzzerOn();
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 4   
+
                                                  }
                                           }
                                       }
@@ -254,11 +251,11 @@ line level    source
                                       }
                                   #endif
  233   2                      break;
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 5   
-
  234   2                              
  235   2                 case MSG_UPK_MODE:
  236   2                  printfStr("MSG_UPK_MODE");
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 5   
+
  237   2                          SetSaveFlagEn(); 
  238   2                              
  239   2                              #ifdef BuzzerEn
@@ -318,11 +315,11 @@ line level    source
  293   2                          if((g_sysSetting.Car.status == CAR_PON_REVERSING) || (g_sysSetting.Car.status == CAR_POF_REVERSIN
              -G))
  294   2                          {
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 6   
-
  295   3                              return COMD_Nothing;
  296   3                          }
  297   2                      break;
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 6   
+
  298   2                              
  299   2                 case MSG_UPK_POWER:
  300   2                          printfStr("MSG_UPK_POWER");
@@ -382,11 +379,11 @@ line level    source
  352   2                  {   
  353   3                              if(CurrentMenuItem.KeyComdMap[ucIndex].cConditions & g_UserInputInfo.Status)
  354   3                              {
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 7   
-
  355   4                                      ucComd = CurrentMenuItem.KeyComdMap[ucIndex].Comd;  
  356   4                                      return ucComd;
  357   4                              }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 7   
+
  358   3                              else
  359   3                              {   
  360   4                      if(FindMenuPageIndex(Osd_RootMenu) == g_ucMenuPageIndex)
@@ -446,11 +443,11 @@ line level    source
  414   4                                       }
  415   3                                       else
  416   3                                       {
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 8   
-
  417   4                                                g_ucMenuItemIndex = GetPrevItem();
  418   4                                                //printf("prev g_ucMenuItemIndex = %x", g_ucMenuItemIndex);
  419   4                                       }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 8   
+
  420   3                       if(FindMenuPageIndex(Osd_FactoryMenu) ==g_ucMenuPageIndex)  
  421   3                                       { 
  422   4                                           g_ucFactoryMenuItemIndex = g_ucMenuItemIndex;
@@ -510,11 +507,11 @@ line level    source
  476   3                                      OsdConfigScaler(OsdScalerRatio);  
  477   3                                      DrawOsdMenu();  
  478   3                                      DrawOsdMenuItem(&CurrentMenuItem, osdDraw);     
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 9   
-
  479   3                                      SetMenuIndex(Osd_FactoryMenu);
  480   3                                      g_ucMenuItemIndex = g_ucFactoryMenuItemIndex;
  481   3                                      break;
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 9   
+
  482   3      
  483   3                              case COMD_SelPowerOnMode:
  484   3                                      if(IsAllPowerOn())
@@ -574,11 +571,11 @@ line level    source
                                                                          SetMenuIndex(Osd_LOGO3Menu);
                                                                          break;
               
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 10  
-
                                                                 case LOGO4:
                                                                          printfStr("Osd_Logo4Menu");
                                                                          SetMenuIndex(Osd_LOGO4Menu);
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 10  
+
                                                                          break;
                                                                          
                                                                case LOGO5:
@@ -638,11 +635,11 @@ line level    source
  600   4                                                         SetMenuIndex(Osd_LOGO4Menu);
  601   4                                                         break;
  602   4                                                         
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 11  
-
  603   4                                               case LOGO5:
  604   4                                                         printfStr("Osd_Logo5Menu");
  605   4                                                         SetMenuIndex(Osd_LOGO5Menu);
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 11  
+
  606   4                                                         break;       
  607   4                                                         
  608   4                                               default:
@@ -702,11 +699,11 @@ line level    source
  662   3                                       
  663   3                 case COMD_TurnOffBacklight:
  664   3                                       printfStr("COMD_TurnOffBacklight");
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 12  
-
  665   3                                       if(g_bBackLightFlg)
  666   3                                       {
  667   4                                            
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 12  
+
  668   4                                              TurnOffBackLight(); 
  669   4                                              SaveSetting();
  670   4                                       }                               
@@ -766,11 +763,11 @@ line level    source
  724   5                                         }
  725   4                                      }
  726   3                                      if(CurrentMenuItem.ExecFunction)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 13  
-
  727   3                                      {
  728   4                                                CurrentMenuItem.ExecFunction();
  729   4                                      }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 13  
+
  730   3                                      break;
  731   3                                        
  732   3                              case COMD_SelMode:
@@ -830,11 +827,11 @@ line level    source
  786   3                                       {
  787   4                                           return FALSE;
  788   4                                       }
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 14  
-
  789   3                                       SetMenuIndex(Osd_QuicklySys);
  790   3                       if(CurrentMenuItem.AdjustFunction)
  791   3                                       {
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 14  
+
  792   4                                          if(CurrentMenuItem.AdjustFunction(OpratComd))
  793   4                                              {
  794   5                                                  DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
@@ -894,11 +891,11 @@ line level    source
  848   4                                              g_ucOsdEixt |= OsdSaturation;
  849   4                                      }
  850   3                                      if(CurrentMenuItem.AdjustFunction)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 15  
-
  851   3                                      {
  852   4                                         if(CurrentMenuItem.AdjustFunction(OpratComd))
  853   4                                         {
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 15  
+
  854   5                                                  DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
  855   5                                         }
  856   4                                      }
@@ -958,11 +955,11 @@ line level    source
                                                 OsdBlockEnable(CurrentBlock);
                                                 OsdConfigScaler(NoSignalScalerRatio);                           
                                                 DrawOsdMenu();
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 16  
-
                                               }
                                               #endif
  915   3                                      
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 16  
+
  916   3                                      ResetMenuIndex();
  917   3                                      SaveSetting();                                  
  918   3                                      return FALSE;
@@ -1022,11 +1019,11 @@ line level    source
                                                   if(!g_bBackLightFlg)
                                                       {                                          
                                      #ifdef BacklightEn
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 17  
-
                                      hw_setBIASEn();
                                      #endif
                                      
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 17  
+
                                      DelayMs(100);    
                                                          
                                                          #ifdef BacklightEn
@@ -1086,11 +1083,11 @@ line level    source
 1034          void MenuProcessKey(BYTE OpratComd)
 1035          {
 1036   1              if (OpratComd)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 18  
-
 1037   1              {   
 1038   2                      if(IsPowerOff()&&(g_sysSetting.Car.status != CAR_POF_REVERSING))
 1039   2                      {   
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 18  
+
 1040   3                  if((OpratComd!=COMD_SelPowerOnMode) && (OpratComd!=COMD_Power)&&(inputPress == g_UserInputInfo
              -.Status))
 1041   3                              {  
@@ -1150,11 +1147,11 @@ line level    source
 1095   1              OsdHide();
 1096   1              OsdClear();
 1097   1              OsdCofigPalette();
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 19  
-
 1098   1              OsdIconSize(ICON_SIZE_X,ICON_SIZE_Y);
 1099   1              OsdConfigAlpha(ENABLE,OSD_BACK_BLENDING,5);
 1100   1              OsdConfigBitmapStarIndex(ICONBITMAP_SATRT_INDEX);       
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 19  
+
 1101   1              OsdConfigBright(7);
 1102   1              #if(ICON_SIZE == SIZE_12X16)
 1103   1              DMALoadFontRam((ULONG)AMT630FontLib&0X000FFFF,0<<4,5440);  // 170
@@ -1214,11 +1211,11 @@ line level    source
 1157   1         
 1158   1      }
 1159          
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 20  
-
 1160          /******************************************************************
 1161          *Name: void DrawOsdIcon(IconType* pIcon,UCHAR status)
 1162          *input:  pIcon  »­ICON Ö¸Õë
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 20  
+
 1163                   status     ×´Ì¬: »­×´Ì¬£¬ Ñ¡Ôñ×´Ì¬£¬ 
 1164          *output: void
 1165                
@@ -1278,11 +1275,11 @@ line level    source
 1218   1              
 1219   1          //printfStr("DrawOsdMenuItemNumber");
 1220   1              if(pNumberItem!=NULL)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 21  
-
 1221   1              {
 1222   2                   if(status&osdDraw)
 1223   2                       {
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 21  
+
 1224   3                               ucForeColor = pNumberItem->ForeColor;
 1225   3                               ucBackColor = pNumberItem->BackColor;
 1226   3                       }
@@ -1342,11 +1339,11 @@ line level    source
 1277            
 1278          /******************************************************************
 1279          *Name: void DrawOsdMenuItemOption(DrawOptionType *radioItem,UCHAR status)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 22  
-
 1280          *input:  pNumberItem  »­Ñ¡Ïî(text)
 1281                   status     ×´Ì¬: »­×´Ì¬£¬ Ñ¡Ôñ×´Ì¬£¬ 
 1282          *output: void
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 22  
+
 1283                
 1284          *Description: »­Ñ¡Ïî(text)
 1285          
@@ -1406,11 +1403,11 @@ line level    source
 1338   3              }
 1339   2              if(pItemValue->DrawOption)
 1340   2              {
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 23  
-
 1341   3                  DrawOsdMenuItemOption(pItemValue->DrawOption,status);
 1342   3              }
 1343   2              if(pItemValue->Flags&osdEnd)
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 23  
+
 1344   2              {
 1345   3                      break;
 1346   3              }    
@@ -1470,11 +1467,11 @@ line level    source
 1400   1              UCHAR XDATA i;
 1401   1      
 1402   1              printfStr(CurrentMenu->MenuName);
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 24  
-
 1403   1      
 1404   1              //Ê×ÏÈÅÐ¶Ï»­´Ë²Ëµ¥µÄÌõ¼þ¡£
 1405   1          if(CurrentMenu->CheckCondition)
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 24  
+
 1406   1          {
 1407   2              wcDrawMenuCdtion = CurrentMenu->CheckCondition();
 1408   2              }
@@ -1534,11 +1531,11 @@ line level    source
 1462   2              wcDrawMenuCdtion = CurrentMenu->CheckCondition();
 1463   2              }
 1464   1          //ÅÐ¶ÏÊÇ·ñÐèÒªÒþ²Ø¡£
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 25  
-
 1465   1              if(CurrentMenu->Flags & osdInvisible)
 1466   1              {
 1467   2                  HideMenu();
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 25  
+
 1468   2                      printfStr("hide osd\n");
 1469   2              }
 1470   1              else
@@ -1598,11 +1595,11 @@ line level    source
 1524   3                              if(CurrentMenuItem.CheckCondition)
 1525   3                              {
 1526   4                                      if(CurrentMenuItem.CheckCondition().Flags & osdVisible)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 26  
-
 1527   4                                      {
 1528   5                                              ucPrevItemIndex = g_ucMenuItemIndex;
 1529   5                                              g_ucMenuItemIndex = ucTempItemIndex;
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 26  
+
 1530   5                                              return ucPrevItemIndex;
 1531   5                                      } 
 1532   4                              }
@@ -1662,11 +1659,11 @@ line level    source
 1586   2                      {
 1587   3                              break;
 1588   3                      }
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 27  
-
 1589   2              }
 1590   1          return ucPrevItemIndex;
 1591   1      }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 27  
+
 1592          
 1593          
 1594          UCHAR GetNextMenu(void)
@@ -1726,11 +1723,11 @@ line level    source
 1648   1              ucPrePage = CurrentMenu->PrevPage;
 1649   1              ucIndex = g_ucMenuPageIndex;
 1650   1          while(1)
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 28  
-
 1651   1          {
 1652   2               if(g_ucMenuPageIndex>0)
 1653   2               {
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 28  
+
 1654   3                   g_ucMenuPageIndex--;
 1655   3               }
 1656   2                       else
@@ -1790,11 +1787,11 @@ line level    source
 1710   1               UINT  XDATA Block1MaxSize=0;
 1711   1               UINT  XDATA Block2MaxSize=0;
 1712   1               UINT  XDATA Block3MaxSize=0;
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 29  
-
 1713   1               UINT  XDATA Block4MaxSize=0;
 1714   1               
 1715   1           for(i=0;i<MenuCount;i++)
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 29  
+
 1716   1           {
 1717   2                switch(tblMenus[i]->OsdBlockId)
 1718   2                {
@@ -1854,11 +1851,11 @@ line level    source
 1772   2           }
 1773   1               else
 1774   1               {
-C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 30  
-
 1775   2                   printfStr("Osd Block Size Error!!!!");
 1776   2                       printfStr("block all size add > 512");
 1777   2               }
+C51 COMPILER V9.00   OSD_MENU                                                              06/07/2020 11:05:59 PAGE 30  
+
 1778   1              
 1779   1               
 1780   1      }
@@ -1886,4 +1883,16 @@ line level    source
 1802   2              }
 1803   1      }
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   8996    ----
+   CONSTANT SIZE    =   3303    ----
+   XDATA SIZE       =      3      37
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      21
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

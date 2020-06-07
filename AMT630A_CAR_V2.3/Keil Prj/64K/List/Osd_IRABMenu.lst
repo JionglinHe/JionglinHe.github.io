@@ -1,15 +1,15 @@
-C51 COMPILER V9.51   OSD_IRABMENU                                                          09/08/2019 13:51:55 PAGE 1   
+C51 COMPILER V9.00   OSD_IRABMENU                                                          06/07/2020 11:05:52 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE OSD_IRABMENU
+C51 COMPILER V9.00, COMPILATION OF MODULE OSD_IRABMENU
 OBJECT MODULE PLACED IN ..\Hex\Osd_IRABMenu.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_IRABMenu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\
-                    -OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Panne
-                    -ls;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\
-                    -GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device d
-                    -river\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device drive
-                    -r\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_IRABMenu.lst) OBJECT(..\Hex\Osd
-                    -_IRABMenu.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\OSD\Osd_IRABMenu.c BROWSE INCDIR(..\..\..\OSD;..\..\..
+                    -\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\..\..\
+                    -LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUserInput
+                    -\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\Flash;
+                    -..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0803l;..
+                    -\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_IRABMenu.lst) OBJECT(..\Hex\Osd_IRABMenu.ob
+                    -j)
 
 line level    source
 
@@ -20,8 +20,6 @@ line level    source
    5          #include "DataType.h"
    6          #include "SystemConfig.h"
    7          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
    8          #include "MsgMap.h"
    9          #include "sysWorkPara.h"
   10          #include "sysPower.h" 
@@ -62,10 +60,10 @@ line level    source
   45          
   46          UCHAR* CODE IRABStr[3]=
   47          {
-C51 COMPILER V9.51   OSD_IRABMENU                                                          09/08/2019 13:51:55 PAGE 2   
-
   48            "   IR OFF  ",
   49            "A:2.3M&\x0032.8M",
+C51 COMPILER V9.00   OSD_IRABMENU                                                          06/07/2020 11:05:52 PAGE 2   
+
   50            "B:3.2M&\x0033.8M"
   51          };
   52          
@@ -126,10 +124,10 @@ line level    source
  107   1              OsdWndClear(0X01, 0X00, 0X01, 0X11);
  108   1          return 0;
  109   1      }
-C51 COMPILER V9.51   OSD_IRABMENU                                                          09/08/2019 13:51:55 PAGE 3   
-
  110          
  111          
+C51 COMPILER V9.00   OSD_IRABMENU                                                          06/07/2020 11:05:52 PAGE 3   
+
  112          BOOL AdjustIRAB(UCHAR opratComd)
  113          {    
  114   1      
@@ -190,10 +188,10 @@ line level    source
  169          
  170          /*****************************************************************
  171                                   Item  Titel table
-C51 COMPILER V9.51   OSD_IRABMENU                                                          09/08/2019 13:51:55 PAGE 4   
-
  172          *****************************************************************/
  173          TitelType CODE IRABMenuItem_IRABTitelTab[]=
+C51 COMPILER V9.00   OSD_IRABMENU                                                          06/07/2020 11:05:52 PAGE 4   
+
  174          {
  175             {0,6,RED,TRANSPARENCE,RED,TRANSPARENCE,DWT_Text,IRABMenu_TitelStr,osdEnd},
  176          };
@@ -212,4 +210,16 @@ line level    source
  189          
  190          
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    185    ----
+   CONSTANT SIZE    =    134    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

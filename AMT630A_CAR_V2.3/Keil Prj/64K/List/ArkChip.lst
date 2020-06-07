@@ -1,15 +1,15 @@
-C51 COMPILER V9.51   ARKCHIP                                                               09/08/2019 13:51:40 PAGE 1   
+C51 COMPILER V9.00   ARKCHIP                                                               06/07/2020 11:05:34 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE ARKCHIP
+C51 COMPILER V9.00, COMPILATION OF MODULE ARKCHIP
 OBJECT MODULE PLACED IN ..\Hex\ArkChip.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Device driver\ArkChip\ArkChip.c OPTIMIZE(8,SPEED) BROWSE INC
-                    -DIR(..\..\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..
-                    -\..\LCD Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\
-                    -Key;..\..\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\.
-                    -.\..\Device driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..
-                    -\Device driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\ArkChip.lst) OBJECT(..
-                    -\Hex\ArkChip.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\Device driver\ArkChip\ArkChip.c BROWSE INCDIR(..\..\..
+                    -\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pann
+                    -els;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..
+                    -\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device 
+                    -driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driv
+                    -er\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\ArkChip.lst) OBJECT(..\Hex\ArkChip
+                    -.obj)
 
 line level    source
 
@@ -30,8 +30,6 @@ line level    source
   15          #include "DataType.h"
   16          #include "SystemConfig.h"
   17          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
   18          #include "Mcu.h"
   19          #include "Debug.h"
   20          #include "IrMap.h"
@@ -48,4 +46,16 @@ line level    source
   31          #include "AMT_OsdBootDrv.c"
   32          
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   6194    ----
+   CONSTANT SIZE    =   1651    ----
+   XDATA SIZE       =     15     135
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     24      90
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

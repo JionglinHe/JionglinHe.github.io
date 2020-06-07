@@ -1,15 +1,14 @@
-C51 COMPILER V9.51   OSD_BTMENU                                                            09/08/2019 13:51:52 PAGE 1   
+C51 COMPILER V9.00   OSD_BTMENU                                                            06/07/2020 11:05:41 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE OSD_BTMENU
+C51 COMPILER V9.00, COMPILATION OF MODULE OSD_BTMENU
 OBJECT MODULE PLACED IN ..\Hex\Osd_BTMenu.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_BTMenu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\OS
-                    -D;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels
-                    -;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\Ge
-                    -tUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device dri
-                    -ver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\
-                    -Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_BTMenu.lst) OBJECT(..\Hex\Osd_BTM
-                    -enu.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\OSD\Osd_BTMenu.c BROWSE INCDIR(..\..\..\OSD;..\..\..\O
+                    -SD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\..\..\LC
+                    -D Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUserInput\G
+                    -PIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\Flash;..
+                    -\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0803l;..\.
+                    -.\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_BTMenu.lst) OBJECT(..\Hex\Osd_BTMenu.obj)
 
 line level    source
 
@@ -20,8 +19,6 @@ line level    source
    5          #include "DataType.h"
    6          #include "SystemConfig.h"
    7          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
    8          #include "MsgMap.h"
    9          #include "sysWorkPara.h"
   10          #include "sysPower.h" 
@@ -62,11 +59,11 @@ line level    source
               
               /*****************************************************************
                                          Function
-C51 COMPILER V9.51   OSD_BTMENU                                                            09/08/2019 13:51:52 PAGE 2   
-
               *****************************************************************/
               AdjustType BTMenu_CheckCondition (void)
               {
+C51 COMPILER V9.00   OSD_BTMENU                                                            06/07/2020 11:05:41 PAGE 2   
+
                       AdjustType XDATA adjust = {0,0,0};
                       adjust.Flags |= osdVisible;
                       
@@ -116,4 +113,16 @@ line level    source
               #endif
   98          
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   ----    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

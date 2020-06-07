@@ -1,15 +1,15 @@
-C51 COMPILER V9.51   OSD_GENERALFONTDAT                                                    09/08/2019 13:51:50 PAGE 1   
+C51 COMPILER V9.00   OSD_GENERALFONTDAT                                                    06/07/2020 10:57:55 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE OSD_GENERALFONTDAT
+C51 COMPILER V9.00, COMPILATION OF MODULE OSD_GENERALFONTDAT
 OBJECT MODULE PLACED IN ..\Hex\Osd_GeneralFontDat.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_GeneralFontDat.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\
-                    -..\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD
-                    - Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\
-                    -..\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\De
-                    -vice driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device
-                    - driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_GeneralFontDat.lst) OBJEC
-                    -T(..\Hex\Osd_GeneralFontDat.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\OSD\Osd_GeneralFontDat.c BROWSE INCDIR(..\..\..\OSD;..
+                    -\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\
+                    -..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUse
+                    -rInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\
+                    -Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt08
+                    -03l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_GeneralFontDat.lst) OBJECT(..\Hex\Osd
+                    -_GeneralFontDat.obj)
 
 line level    source
 
@@ -62,7 +62,7 @@ line level    source
   47            0x31,0x98,
   48            0x30,0xF8,
   49            0x30,0xF0,
-C51 COMPILER V9.51   OSD_GENERALFONTDAT                                                    09/08/2019 13:51:50 PAGE 2   
+C51 COMPILER V9.00   OSD_GENERALFONTDAT                                                    06/07/2020 10:57:55 PAGE 2   
 
   50            0x60,0x70,
   51            0x61,0xF8,
@@ -126,7 +126,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =   ----    ----
    CONSTANT SIZE    =    176    ----
    XDATA SIZE       =   ----    ----
-C51 COMPILER V9.51   OSD_GENERALFONTDAT                                                    09/08/2019 13:51:50 PAGE 3   
+C51 COMPILER V9.00   OSD_GENERALFONTDAT                                                    06/07/2020 10:57:55 PAGE 3   
 
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----

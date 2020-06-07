@@ -1,14 +1,14 @@
-C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 1   
+C51 COMPILER V9.00   MAIN                                                                  06/07/2020 11:05:37 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE MAIN
+C51 COMPILER V9.00, COMPILATION OF MODULE MAIN
 OBJECT MODULE PLACED IN ..\Hex\Main.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Kernel\Main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\OSD;.
-                    -.\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..
-                    -\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUs
-                    -erInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver
-                    -\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0
-                    -803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Main.lst) OBJECT(..\Hex\Main.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\Kernel\Main.c BROWSE INCDIR(..\..\..\OSD;..\..\..\OSD\
+                    -Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\..\..\LCD P
+                    -annels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUserInput\GPIO
+                    -;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\Flash;..\..
+                    -\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0803l;..\..\.
+                    -.\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Main.lst) OBJECT(..\Hex\Main.obj)
 
 line level    source
 
@@ -31,8 +31,6 @@ line level    source
   17          #include "DataType.h"
   18          #include "SystemConfig.h"
   19          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
   20          #include "MsgMap.h"
   21          #include "Delay.h"
   22          #include "SysPower.h"
@@ -62,10 +60,10 @@ line level    source
   46   1              while(1)
   47   1              {   
   48   2                  MSG curMsg;
-C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 2   
-
   49   2      
   50   2                      POS_ClearWatchDog();
+C51 COMPILER V9.00   MAIN                                                                  06/07/2020 11:05:37 PAGE 2   
+
   51   2                      
   52   2      
   53   2                  /**********SPI驱动屏的VCOM调节*********/
@@ -126,10 +124,10 @@ line level    source
  108   3                              curMsg = MSG_NULL;
  109   3                      }
  110   2      
-C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 3   
-
  111   2                      /**********BT消息处理********
  112   2              curMsg = POS_GetBTMsg(g_bGetBTFlg);
+C51 COMPILER V9.00   MAIN                                                                  06/07/2020 11:05:37 PAGE 3   
+
  113   2                      if(curMsg != MSG_NULL)
  114   2                      {
  115   2                              BTMsgHandle(curMsg);
@@ -148,4 +146,16 @@ line level    source
  128   1              return;
  129   1      }
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    142    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

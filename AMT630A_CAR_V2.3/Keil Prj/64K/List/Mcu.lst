@@ -1,15 +1,14 @@
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 1   
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE MCU
+C51 COMPILER V9.00, COMPILATION OF MODULE MCU
 OBJECT MODULE PLACED IN ..\Hex\Mcu.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Device driver\Mcu\Mcu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\.
-                    -.\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD 
-                    -Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\.
-                    -.\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Dev
-                    -ice driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device 
-                    -driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Mcu.lst) OBJECT(..\Hex\Mcu.obj
-                    -)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\Device driver\Mcu\Mcu.c BROWSE INCDIR(..\..\..\OSD;..\
+                    -..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\.
+                    -.\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUser
+                    -Input\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\F
+                    -lash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt080
+                    -3l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Mcu.lst) OBJECT(..\Hex\Mcu.obj)
 
 line level    source
 
@@ -39,8 +38,6 @@ line level    source
   24          #include "DataType.h"
   25          #include "systemConfig.h"
   26          #include "global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
   27          #include "Debug.h"
   28          #include "AMT_MCU.h"
   29          #include "AMT_Drv.h"
@@ -62,11 +59,11 @@ line level    source
   45                              1.输入输出的设置
   46                              2.开上拉和下拉或开漏的设置
   47                              3.系统上电默认值得设置
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 2   
-
   48                              4.reserve
   49          
   50          *history:
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 2   
+
   51          ************************************************************/
   52          void InitialPPort(void)
   53          {
@@ -126,11 +123,11 @@ line level    source
  107                            4.reserve
  108          
  109          mcu 晶振频率：11.0592MHz   1/11.0592= 0.09us
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 3   
-
  110          mcu 频率：    11.0592MHz   T3 = 256 *(1/11.0592M)  =  23us    256分频     23us 加1
  111          mcu 频率：    11.0592MHz   T4 = 1024 *(1/11.0592M) =  92us    1024分频
  112          
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 3   
+
  113          
  114          mcu 频率：25MHz   T3 = 1024 *(1/25M) = 40.96us    256*4分频        40.96us 加1
  115          mcu 频率：25MHz   T4 = 4096 *(1/25M) = 163.84us   1024*4分频       163.84us 加1
@@ -190,11 +187,11 @@ line level    source
  169          *output:     
  170          *update:     2009-03-23  
  171          *state:      allright
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 4   
-
  172          
  173          *description:   
  174                               波特率的设置,注意 波特率时钟是由T2来产生。
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 4   
+
  175          *history:
  176          ************************************************************/
  177          void InitialSerialPort(void)
@@ -254,11 +251,11 @@ line level    source
  231   1          WDT_COUNTH  = 0xFF;     // 4分频  65535* 85.36us = 5.6s  
  232   1          WDT_COUNTL  = 0xFF; 
  233   1          WDT_RSTEN   = DISABLE;   // reset mcu enable
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 5   
-
  234   1          WDT_UPDATE_EN = 0XAA;
  235   1      }
  236          
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 5   
+
  237          
  238          
  239          /***********************************************************
@@ -318,11 +315,11 @@ line level    source
  293   1              
  294   1          /*外部中断5设置*/
  295   1              EXIF = EXIF&0x7F; //IE5 = 0
-C51 COMPILER V9.51   MCU                                                                   09/08/2019 13:51:40 PAGE 6   
-
  296   1      
  297   1          /*设置外部中断2优先级*/
  298   1              PX2 = 0; //若要使用外部中断2，则要置为1
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 6   
+
  299   1      
  300   1              /*设置外部中断3优先级*/
  301   1              PX3 = 0; //若要使用外部中断3，则要置为1
@@ -378,4 +375,18 @@ line level    source
  351   1              printfStr("Mcu init ok!\n");
  352   1      }
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    283    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       4
+C51 COMPILER V9.00   MCU                                                                   06/07/2020 11:05:34 PAGE 7   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

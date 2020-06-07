@@ -1,15 +1,14 @@
-C51 COMPILER V9.51   SYSPOWER                                                              09/08/2019 13:51:49 PAGE 1   
+C51 COMPILER V9.00   SYSPOWER                                                              06/07/2020 11:05:39 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE SYSPOWER
+C51 COMPILER V9.00, COMPILATION OF MODULE SYSPOWER
 OBJECT MODULE PLACED IN ..\Hex\SysPower.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Modules\SysPower.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\
-                    -OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Panne
-                    -ls;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\
-                    -GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device d
-                    -river\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device drive
-                    -r\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\SysPower.lst) OBJECT(..\Hex\SysPowe
-                    -r.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\Modules\SysPower.c BROWSE INCDIR(..\..\..\OSD;..\..\..
+                    -\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..\..\..\
+                    -LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUserInput
+                    -\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver\Flash;
+                    -..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0803l;..
+                    -\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\SysPower.lst) OBJECT(..\Hex\SysPower.obj)
 
 line level    source
 
@@ -32,8 +31,6 @@ line level    source
   17          #include "DataType.h"
   18          #include "systemConfig.h"
   19          #include "global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
   20          #include "configlcdpara.h"
   21          #include "Debug.h"
   22          #include "sysWorkPara.h"
@@ -62,11 +59,11 @@ line level    source
   45          *****************************************************************************/
   46          BOOL PowerOnSystem(void)
   47          {       
-C51 COMPILER V9.51   SYSPOWER                                                              09/08/2019 13:51:49 PAGE 2   
-
   48   1          printfStr("PowerOnSystem\n");
   49   1      
   50   1              #ifdef PowerLedEn
+C51 COMPILER V9.00   SYSPOWER                                                              06/07/2020 11:05:39 PAGE 2   
+
                       hw_setGreenLEDOn();
                       hw_setRedLEDOff();
                       #endif
@@ -126,11 +123,11 @@ line level    source
                          {
                                 TurnOnBackLight();
                          }
-C51 COMPILER V9.51   SYSPOWER                                                              09/08/2019 13:51:49 PAGE 3   
-
                          else
                          {
                             EnterLowPowerMode();
+C51 COMPILER V9.00   SYSPOWER                                                              06/07/2020 11:05:39 PAGE 3   
+
                          }
                          #else
                          TurnOnBackLight();
@@ -190,11 +187,11 @@ line level    source
  169   1              #ifdef AudioCtrlEn
                       SetAudioMute(); 
                       #endif
-C51 COMPILER V9.51   SYSPOWER                                                              09/08/2019 13:51:49 PAGE 4   
-
  172   1              
  173   1              TurnOffBackLight();     
  174   1              SaveSetting();
+C51 COMPILER V9.00   SYSPOWER                                                              06/07/2020 11:05:39 PAGE 4   
+
  175   1              TurnOffDevicePower(g_sysSetting.Video.curSource);   
  176   1              EnterLowPowerMode();
  177   1              
@@ -204,4 +201,16 @@ line level    source
  181   1              return 1;
  182   1      }
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    146    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

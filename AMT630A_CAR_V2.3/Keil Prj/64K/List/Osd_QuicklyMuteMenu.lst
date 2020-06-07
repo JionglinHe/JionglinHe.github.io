@@ -1,15 +1,15 @@
-C51 COMPILER V9.51   OSD_QUICKLYMUTEMENU                                                   09/08/2019 13:51:52 PAGE 1   
+C51 COMPILER V9.00   OSD_QUICKLYMUTEMENU                                                   06/07/2020 11:05:42 PAGE 1   
 
 
-C51 COMPILER V9.51, COMPILATION OF MODULE OSD_QUICKLYMUTEMENU
+C51 COMPILER V9.00, COMPILATION OF MODULE OSD_QUICKLYMUTEMENU
 OBJECT MODULE PLACED IN ..\Hex\Osd_QuicklyMuteMenu.obj
-COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_QuicklyMuteMenu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..
-                    -\..\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LC
-                    -D Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..
-                    -\..\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\D
-                    -evice driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Devic
-                    -e driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_QuicklyMuteMenu.lst) OBJ
-                    -ECT(..\Hex\Osd_QuicklyMuteMenu.obj)
+COMPILER INVOKED BY: D:\Keil4_ForAMT630A\C51\BIN\C51.EXE ..\..\..\OSD\Osd_QuicklyMuteMenu.c BROWSE INCDIR(..\..\..\OSD;.
+                    -.\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..
+                    -\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUs
+                    -erInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver
+                    -\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0
+                    -803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_QuicklyMuteMenu.lst) OBJECT(..\Hex\O
+                    -sd_QuicklyMuteMenu.obj)
 
 line level    source
 
@@ -19,8 +19,6 @@ line level    source
    4          #include "DataType.h"
    5          #include "SystemConfig.h"
    6          #include "Global.h"
-*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
-*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
    7          #include "MsgMap.h"
    8          #include "sysWorkPara.h"
    9          #include "sysPower.h" 
@@ -62,10 +60,10 @@ line level    source
   45          /*****************************************************************
   46                                     Function
   47          *****************************************************************/
-C51 COMPILER V9.51   OSD_QUICKLYMUTEMENU                                                   09/08/2019 13:51:52 PAGE 2   
-
   48          AdjustType QuicklyMuteMenu_CheckCondition (void)
   49          {
+C51 COMPILER V9.00   OSD_QUICKLYMUTEMENU                                                   06/07/2020 11:05:42 PAGE 2   
+
   50   1              AdjustType XDATA adjust = {0,0,0};
   51   1              adjust.Flags |= osdVisible;
   52   1              g_ucOsdEixt = OsdMenu|OsdSource;
@@ -126,10 +124,10 @@ line level    source
  106          };
  107          
  108          /*****************************************************************
-C51 COMPILER V9.51   OSD_QUICKLYMUTEMENU                                                   09/08/2019 13:51:52 PAGE 3   
-
  109                                    Item Icon table
  110          *****************************************************************/
+C51 COMPILER V9.00   OSD_QUICKLYMUTEMENU                                                   06/07/2020 11:05:42 PAGE 3   
+
  111          
  112          
  113          /*****************************************************************
@@ -147,4 +145,16 @@ line level    source
  125          *****************************************************************/
  126          
 
-C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    102    ----
+   CONSTANT SIZE    =     38    ----
+   XDATA SIZE       =   ----       3
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
