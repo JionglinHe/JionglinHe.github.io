@@ -1,0 +1,398 @@
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE CONFIGLCDPARA
+OBJECT MODULE PLACED IN ..\Hex\ConfigLcdPara.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\LCD Pannels\ConfigLcdPara.c OPTIMIZE(8,SPEED) BROWSE INCDIR(
+                    -..\..\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\
+                    -LCD Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;
+                    -..\..\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..
+                    -\Device driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Dev
+                    -ice driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\ConfigLcdPara.lst) OBJECT(
+                    -..\Hex\ConfigLcdPara.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          *Copyright (C) 2005 ÉîÛÚ°¬¿Æ´´ÐÂÓÐÏÞ¹«Ë¾²úÆ·Ó¦ÓÃÒ»²¿
+   3          * All rights reserved.
+   4          
+   5          *File name: ¡¡ ConfigLcdPara.c    
+   6          *Version:      1.0
+   7          *update:       2011-11-16
+   8          *Description:
+   9                            ÅäÖÃÆÁ²Î¡£
+  10                            
+  11          *History:  yshuizhou   2011/12/06    1.0    build  this  moudle
+  12          ******************************************************************************/
+  13          #define _CONFIGLCDPARA_C_
+  14          
+  15          #include "DataType.h"
+  16          #include "systemConfig.h"
+  17          #include "global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  18          #include "ConfigLcdPara.h"
+  19          #include "delay.h"
+  20          #include "debug.h"
+  21          #include "AMT_Reg.h"
+  22          #include "LcdPannelList.c" 
+*** WARNING C322 IN LINE 7 OF ..\..\..\LCD Pannels\LCD parameter\LcdPannelList.c: unknown identifier
+  23          #include "AMT_Drv.h"
+  24          #include "AMT_Mcu.h"
+  25          
+  26          
+  27          
+  28          
+  29          /****************************************************************************
+  30          name:   DataCurve(UCHAR minDat,UCHAR ideaDat,UCHAR maxDat,UCHAR currentDat,UCHAR len)
+  31          input:   
+  32                  ideaDat    ±ê×¼Ä£Ê½Ê±Ð´µ½¼Ä´æÆ÷µÄÖµ  
+  33                      maxDat     Ð´µ½¼Ä´æÆ÷µÄ×î´óÖµ
+  34                  minDat     Ð´µ½¼Ä´æÆ÷µÄ×îÐ¡Öµ
+  35                      currentDat OSDÏÔÊ¾µÄÖµÓÐÐ§·¶Î§ 0 - 100 
+  36                      len        ÄÜ¹»µ÷½ÚµÄ×î´óÖµ
+  37                      
+  38          *output: ·µ»ØÐ´µ½¼Ä´æÆ÷ÖÐµÄÊµ¼ÊÖµ¡£
+  39          
+  40          *description:
+  41                Õâ¸öº¯ÊýÊÇÓÃÀ´Õë¶ÔÁÁ¶È¡¢¶Ô±È¶È¡¢É«¶È£¬¸ù¾ÝÊµ¼ÊÖÐÐ´¸ø¼Ä´æÆ÷µÄ×î´óÖµ¡¢±ê×¼Öµ£¬µ±Ç°OSDµÄÖµ·µ»ØÒ»¸öÐ´µ½¼
+             -Ä´æÆ÷µÄÖµ¡£
+  42          
+  43          *history: yshuizhou   2011/12/06    0.1    transplant   this  function
+  44          *****************************************************************************/
+  45          UCHAR DataCurve(UCHAR minDat,UCHAR ideaDat,UCHAR maxDat,UCHAR currentDat,UCHAR len)             
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 2   
+
+  46          {
+  47   1          UCHAR XDATA regVal;
+  48   1         
+  49   1          if(ideaDat >= 10)
+  50   1          {
+  51   2                if((currentDat>=0)&&(currentDat<((len>>1)-2)))
+  52   2                    {
+  53   3                           regVal=(UINT)((ideaDat - (minDat+10))*currentDat)/((len>>1)-2) + minDat;
+  54   3                           return(regVal);
+  55   3                    }
+  56   2                        else if((currentDat>=((len>>1)-2))&&(currentDat<=((len>>1)+2)))
+  57   2                        {  
+  58   3                                regVal= ideaDat+currentDat-(len>>1);            
+  59   3                                return(regVal);
+  60   3                        }
+  61   2                        else
+  62   2                        {
+  63   3                                regVal= ideaDat+10+(UINT)((maxDat-10-ideaDat)*(currentDat-((len>>1)+2)))/((len>>1)-2);
+  64   3                                return(regVal);
+  65   3                        }
+  66   2          }
+  67   1         return(ideaDat);
+  68   1      }
+  69          
+  70          
+  71          
+  72          /****************************************************************************
+  73          name:   UCHAR TintCurve(UCHAR currentDat,UCHAR len)
+  74          input:  currentDat OSDÏÔÊ¾µÄÖµ   ÓÐÐ§·¶Î§ 0 - 100        
+  75          *output: ·µ»ØÐ´µ½¼Ä´æÆ÷ÖÐµÄÊµ¼ÊÖµ¡£
+  76          
+  77          *description:
+  78                Õâ¸öº¯ÊýÊÇÓÃÀ´Õë¶ÔÉ«µ÷£¬¸ù¾Ýµ±Ç°OSDµÄÖµ·µ»ØÒ»¸öÐ´µ½¼Ä´æÆ÷µÄÖµ¡£
+  79          
+  80          *history: yshuizhou   2011/12/06    1.0    transplant   this  function
+  81          *****************************************************************************/
+  82          UCHAR TintCurve(UCHAR currentDat,UCHAR len)
+  83          {
+  84   1         UCHAR XDATA regVal;
+  85   1         if(currentDat == (len>>1))
+  86   1         {
+  87   2              regVal = 0x00;
+  88   2         }
+  89   1         else if((currentDat < (len>>1))&&(currentDat >= 0))
+  90   1         {   
+  91   2              regVal = ((UCHAR)(20 - (WORD)(20 * currentDat)/(len>>1)) | 0x80);
+  92   2         }
+  93   1         else if((currentDat > (len>>1))&&(currentDat <= len))
+  94   1         {
+  95   2              regVal = ((UCHAR)((WORD)(30 * currentDat)/(len>>1) - 30) & 0x7f);
+  96   2         }
+  97   1         return regVal;
+  98   1      }
+  99          
+ 100          
+ 101          
+ 102          /***********************************************************
+ 103          *name:          GetSourceID(UCHAR CurretSource)
+ 104          *input:     CurretSource
+ 105          *output:    non
+ 106          *update:    2011-11-18
+ 107          *state:     allright
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 3   
+
+ 108          
+ 109          *description:  
+ 110                   Õâ¸öº¯ÊýÊÇ»ñÈ¡µ±Ç°Í¨µÀµÄÆÁ²ÎIDºÅ¡£      
+ 111          
+ 112          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 113          ************************************************************/
+ 114          UCHAR GetSourceID(UCHAR CurretSource)
+ 115          {
+ 116   1          UCHAR XDATA i;
+ 117   1              
+ 118   1              for(i=0;i<(sizeof(VideoChannelPara)/sizeof(VideoChannelPara[0]));i++)
+ 119   1              {
+ 120   2                    if(VideoChannelPara[i].INPUT_ID == CurretSource)
+ 121   2                    {
+ 122   3                        return i;
+ 123   3                    }
+ 124   2               }
+ 125   1               return 0;
+ 126   1      }
+ 127          
+ 128          
+ 129          
+ 130          /***********************************************************
+ 131          *name:    ConfigStaticPara() 
+ 132          *input:     CurretSource
+ 133          *output:    non
+ 134          *Update:    2011-11-18
+ 135          *state:     allright
+ 136          
+ 137          *description:  
+ 138                   Õâ¸öº¯ÊýÊÇÅäÖÃ²»Í¬Í¨µÀµÄ¾²Ì¬²ÎÊý¡£      
+ 139          
+ 140          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 141          ************************************************************/
+ 142          void ConfigStaticPara(UCHAR CurretSource)
+ 143          {     
+ 144   1           UINT  XDATA i;
+ 145   1               UCHAR XDATA ucSourceIndex;
+ 146   1                      
+ 147   1               ucSourceIndex = GetSourceID(CurretSource);
+ 148   1               
+ 149   1           for(i=0; i<STATIC_NUM;i++)
+ 150   1               {     
+ 151   2                       XBYTE[VideoChannelPara[ucSourceIndex].VideoPara.pVideoStaicPara[i].addr] = VideoChannelPara[ucSourceInd
+             -ex].VideoPara.pVideoStaicPara[i].dat;
+ 152   2               }
+ 153   1      
+ 154   1              // #ifdef NoSignalBLOffEn
+ 155   1               //XBYTE[0XFFB0] = 0X07;
+ 156   1              // #endif
+ 157   1      }
+ 158          
+ 159          
+ 160          
+ 161          /***********************************************************
+ 162          *name:    ConfigPadMuxPara() 
+ 163          *input:   non
+ 164          *output:  non
+ 165          *Update:  2011-11-18
+ 166          *state:   allright
+ 167          
+ 168          *description:  
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 4   
+
+ 169                   Õâ¸öº¯ÊýÊÇÅäÖÃ²»Í¬Í¨µÀµÄ¾²Ì¬²ÎÊý¡£      
+ 170          
+ 171          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 172          ************************************************************/
+ 173          void ConfigPadMuxPara(void)
+ 174          {    
+ 175   1           UINT  XDATA i;
+ 176   1           for(i=0; i<PAD_MUX_NUM;i++)
+ 177   1               {     
+ 178   2               XBYTE[AMT_PadMuxStaticPara[i].addr] = AMT_PadMuxStaticPara[i].dat;
+ 179   2               }
+ 180   1      }
+ 181          
+ 182          
+ 183          /***********************************************************
+ 184          *name:          ConfigUserParaSetting(void) 
+ 185          *input:     void
+ 186          *output:    void
+ 187          *update:    2013-03-28
+ 188          *state:     allright
+ 189          
+ 190          *description:  
+ 191                   Õâ¸öº¯ÊýÊÇÓÃÀ´½â¾ö²»Í¬¿Í»§µÄÒ»Ð©ÌØÊâÅäÖÃ²ÎÊý¡£
+ 192          
+ 193          *History:  Jordan¡£chen   2013/03/28    0.1    build  this  function
+ 194          ************************************************************/
+ 195          void ConfigUserParaSetting(void)
+ 196          {
+ 197   1          ConfigUserPara();
+ 198   1      }
+ 199          
+ 200          
+ 201          /***********************************************************
+ 202          *name:          ConfigColorSysDynPara(UCHAR currentSys) 
+ 203          *input:     currentSys
+ 204          *output:    non
+ 205          *update:    2011-11-18
+ 206          *state:     allright
+ 207          
+ 208          *description:  
+ 209                   Õâ¸öº¯ÊýÊÇÊµÊ±ÅäÖÃ²»Í¬Í¼ÏñÖÆÊ½²ÎÊý¡£      
+ 210          
+ 211          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 212          ************************************************************/
+ 213          void ConfigColorSysDynPara(UCHAR currentSys) 
+ 214          {    
+ 215   1               UCHAR XDATA i;
+ 216   1               UCHAR XDATA ucSourceIndex;
+ 217   1      
+ 218   1               ucSourceIndex = GetSourceID(g_sysSetting.Video.curSource);
+ 219   1               
+ 220   1               for(i=0; i<SYS_DYN_NUM;i++)    
+ 221   1               {               
+ 222   2               XBYTE[VideoChannelPara[ucSourceIndex].VideoPara.pVideoSysDynPara[i].addr] = VideoChannelPara[ucSo
+             -urceIndex].VideoPara.pVideoSysDynPara[i].dat_sysDyn[currentSys];
+ 223   2               }      
+ 224   1               
+ 225   1               g_ucbrightness = BRIGHT_REG;
+ 226   1               g_ucContrast = CONTRAST_REG;
+ 227   1               g_ucSaturation = SATURATION_REG;
+ 228   1               g_ucTint = TINT_REG;
+ 229   1              
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 5   
+
+ 230   1           g_ucbrightness =  DataCurve(BRIGHT_MIN,g_ucbrightness,BRIGHT_MAX, g_sysSetting.Video.brightnessOffset
+             -,MAX_VALUE);
+ 231   1               g_ucContrast = DataCurve(CONTRAST_MIN,g_ucContrast,CONTRAST_MAX, g_sysSetting.Video.contrastOffset,MAX_V
+             -ALUE);
+ 232   1               g_ucSaturation=  DataCurve(SATURATION_MIN,g_ucSaturation,SATURATION_MAX, g_sysSetting.Video.saturationOf
+             -fset,MAX_VALUE);
+ 233   1               UpdataPicPara();
+ 234   1      }
+ 235          
+ 236          
+ 237          
+ 238          
+ 239          /***********************************************************
+ 240          *name:          ConfigDispZoomDynPara(UCHAR currentmode) 
+ 241          *input:     currentmode
+ 242          *output:    non
+ 243          *update:    2011-11-18
+ 244          *state:     allright
+ 245          
+ 246          *description:  
+ 247                   Õâ¸öº¯ÊýÊÇÅäÖÃ²»Í¬Í¨µÀ16:9/4:3ÏÔÊ¾µÄ²ÎÊý¡£      
+ 248          
+ 249          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 250          ************************************************************/
+ 251          void ConfigDispZoomDynPara(UCHAR currentmode) 
+ 252          {    
+ 253   1                UCHAR XDATA i;
+ 254   1      
+ 255   1                EA = OFF;
+ 256   1                SCALER_HSYNC_UPDATE |= _BIT6;
+ 257   1                for(i=0; i<POS_DYN_NUM;i++)
+ 258   1                {
+ 259   2                              XBYTE[VideoChannelPara[GetSourceID(g_sysSetting.Video.curSource)].VideoPara.pVideoPosDynPara[i].addr] =
+             - VideoChannelPara[GetSourceID(g_sysSetting.Video.curSource)].VideoPara.pVideoPosDynPara[i].dat_posDyn[currentmode];
+ 260   2                }      
+ 261   1                HFZ_LR_BLANK_WR = 0X00;
+ 262   1                EA = ON;
+ 263   1      }
+ 264          
+ 265          
+ 266          
+ 267          /***********************************************************
+ 268          *name:          ConfigPannelSfrDisp(void) 
+ 269          *input:     void
+ 270          *output:    non
+ 271          *update:    2012-05-22
+ 272          *state:     allright
+ 273          
+ 274          *description:  
+ 275                   Õâ¸öº¯ÊýÊÇÅäÖÃÆÁµÄ·­×ª¡£    
+ 276          
+ 277          *History:  yshuizhou   2012/05/22    1.0    build  this  function
+ 278          ************************************************************/
+ 279          void ConfigPannelSfrDisp(void) 
+ 280          {  
+ 281   1          #ifdef PannelSfrDispEn
+                  switch(g_sysSetting.Disp.flipMode)
+                  {
+                   case FilpLeft:
+                                printfStr("FilpLeft");
+                                hw_turnToLeft();
+                                break;
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 6   
+
+                                
+                       case FilpRight:
+                                printfStr("FilpRight");
+                                hw_turnToRight();
+                                break;
+                                
+                       case FilpUp:
+                                printfStr("FilpUp");
+                                hw_turnToUp();
+                                break;
+                                
+                       case FilpDown:
+                                printfStr("FilpDown");
+                                hw_turnToDown();
+                                break;
+                                
+                      default:
+                                printfStr("Default FilpLeft");
+                                hw_turnToLeft();
+                                break;
+                 }
+                 #endif
+ 310   1      }
+ 311          
+ 312          
+ 313          
+ 314          
+ 315          
+ 316          /*************************************************************************
+ 317          *name:  UpdataPicPara(void) 
+ 318          *input: currentSys
+ 319          *update:  2011-11-16
+ 320          state:   allright
+ 321          *description: 
+ 322                           ¸üÐÂ²»Í¬Í¨µÀÁÁ¶È¡¢¶Ô±È¶È¡¢É«¶È¡¢É«µ÷²ÎÊý  
+ 323                           
+ 324          *History:  yshuizhou   2011/12/06    1.0    build  this  function
+ 325          **************************************************************************/
+ 326          void UpdataPicPara(void) 
+ 327          {   
+ 328   1              BRIGHT_REG    =  DataCurve(BRIGHT_MIN,g_ucbrightness,BRIGHT_MAX,  g_sysSetting.Video.brigthness,MAX_VALUE
+             -);
+ 329   1              CONTRAST_REG  =  DataCurve(CONTRAST_MIN,g_ucContrast,CONTRAST_MAX,  g_sysSetting.Video.contrast,MAX_VALUE
+             -);
+ 330   1              SATURATION_REG=  DataCurve(SATURATION_MIN,g_ucSaturation,SATURATION_MAX,  g_sysSetting.Video.saturation,M
+             -AX_VALUE);
+ 331   1              TINT_REG      =  TintCurve(g_sysSetting.Video.tint,MAX_VALUE);
+ 332   1      
+ 333   1              switch(VCOMDC_TYPE)
+ 334   1              {
+ 335   2                 case PWM0:
+ 336   2                          SetPWM0(DEFAULT_VCOMDCFREQ,g_sysSetting.Video.vcomDC);
+ 337   2                              break;
+ 338   2                              
+ 339   2                 case PWM1:
+ 340   2                  SetPWM1(DEFAULT_VCOMDCFREQ,g_sysSetting.Video.vcomDC);
+ 341   2                              break;
+ 342   2      
+ 343   2                 case PWM2:
+ 344   2                  SetPWM2(DEFAULT_VCOMDCFREQ,g_sysSetting.Video.vcomDC);
+ 345   2                              break;
+ 346   2      
+C51 COMPILER V9.51   CONFIGLCDPARA                                                         09/08/2019 13:51:35 PAGE 7   
+
+ 347   2                 case PWM3:
+ 348   2                  SetPWM3(DEFAULT_VCOMDCFREQ,g_sysSetting.Video.vcomDC);
+ 349   2                              break;
+ 350   2                              
+ 351   2                default:
+ 352   2                              break;
+ 353   2              }
+ 354   1      }
+ 355          
+ 356          
+
+C51 COMPILATION COMPLETE.  2 WARNING(S),  1 ERROR(S)

@@ -1,0 +1,197 @@
+C51 COMPILER V9.51   OSD_SATURATIONMENU                                                    09/08/2019 13:51:53 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE OSD_SATURATIONMENU
+OBJECT MODULE PLACED IN ..\Hex\Osd_SaturationMenu.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_SaturationMenu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\
+                    -..\..\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD
+                    - Pannels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\
+                    -..\..\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\De
+                    -vice driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device
+                    - driver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_SaturationMenu.lst) OBJEC
+                    -T(..\Hex\Osd_SaturationMenu.obj)
+
+line level    source
+
+   1          #define _OSD_SATURATION_MENU_C_
+   2          
+   3          
+   4          
+   5          #include "DataType.h"
+   6          #include "SystemConfig.h"
+   7          #include "Global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+   8          #include "MsgMap.h"
+   9          #include "sysWorkPara.h"
+  10          #include "sysPower.h" 
+  11          #include "videoProc.h"
+  12          #include "configLCDPara.h"
+  13          #include "Debug.h"
+  14          #include "Delay.h"
+  15          #include "AMT_REG.H"
+  16          #include "AMT_Drv.h"
+  17          #include "AMT_MCU.h"
+  18          #include "Osd_Menu.h"
+  19          #include "Osd_MenuPage.h"
+  20          
+  21          
+  22          
+  23          /*****************************************************************
+  24                                      Text
+  25          *****************************************************************/
+  26          UCHAR* CODE SaturationMenuStr[]=
+  27          {
+  28              "SATURATION     ",
+  29              "SATURATION     ",
+  30              "SATURAZIONE    ",
+  31              "SATURACI\x099N    ",
+  32              "S\x089TTIGUNG    ",
+  33              "SATURA\x0AD\x088O    ",
+  34              "KLEUR        ",
+  35              "\x017\x009\x00C\x0B8\x013\x0B7\x025\x0B8\x028        ",
+  36              "#\x000#\x003             ",
+  37              "#\x052#\x003             ",
+  38              "&\x03&\x04             ",//korea
+  39              "\x017\x009\x01F\x027        ",
+  40              "SATURATION     ",
+  41              "SATURATION     "
+  42          };
+  43          
+  44          
+  45          
+  46          
+  47          /*****************************************************************
+C51 COMPILER V9.51   OSD_SATURATIONMENU                                                    09/08/2019 13:51:53 PAGE 2   
+
+  48                                      String
+  49          *****************************************************************/
+  50          UCHAR * SaturationMenu_TitelStr(void)
+  51          {
+  52   1          return SaturationMenuStr[g_sysSetting.Osd.curlanguage];
+  53   1      }
+  54          
+  55          
+  56          
+  57          /*****************************************************************
+  58                                     Function
+  59          *****************************************************************/
+  60          AdjustType SaturationMenu_CheckCondition(void)
+  61          {
+  62   1              AdjustType XDATA adjust = {0,0,0};
+  63   1          adjust.Flags |= osdVisible;
+  64   1              //printfStr("SaturationMenu_CheckCondition");
+  65   1              return adjust;
+  66   1      }
+  67          
+  68          
+  69          
+  70          
+  71          
+  72          BOOL SaturationMenuItem_DrawStyle(void)
+  73          {
+  74   1          //printfStr("SaturationMenuItem_DrawStyle");
+  75   1          OsdWndClear(0X00, 0X00, 0X00, 0X11);
+  76   1          return 0;
+  77   1      }
+  78          
+  79          
+  80          SWORD GetSaturationVal(void)
+  81          {
+  82   1           //printfStr("GetSaturationVal");
+  83   1           return g_sysSetting.Video.saturation;
+  84   1      }
+  85          
+  86          
+  87          BOOL AdjustSaturation(UCHAR opratComd)
+  88          {
+  89   1          if(opratComd == COMD_IncValue)
+  90   1          {
+  91   2                        if(g_sysSetting.Video.saturation<MAX_VALUE)
+  92   2                        {
+  93   3                            g_sysSetting.Video.saturation++;
+  94   3                        } 
+  95   2                        //printf("Inc Value ++ = %d",g_sysSetting.Video.contrast);
+  96   2          }
+  97   1              if(opratComd == COMD_DecValue)
+  98   1              {
+  99   2                        if(g_sysSetting.Video.saturation>0)
+ 100   2                        {
+ 101   3                            g_sysSetting.Video.saturation--;
+ 102   3                        } 
+ 103   2                       //printf("Dec Value -- =%d",g_sysSetting.Video.contrast);
+ 104   2              }
+ 105   1              if(opratComd == COMD_Saturation)
+ 106   1          {     
+ 107   2                      g_sysSetting.Video.saturation++;
+ 108   2                      if(g_sysSetting.Video.saturation >MAX_VALUE)
+ 109   2                      {
+C51 COMPILER V9.51   OSD_SATURATIONMENU                                                    09/08/2019 13:51:53 PAGE 3   
+
+ 110   3                         g_sysSetting.Video.saturation = 0;
+ 111   3                      }
+ 112   2                  //printf("saturation Adjust Value = %d",g_sysSetting.Video.saturation);
+ 113   2          }
+ 114   1              return 1;
+ 115   1      }
+ 116          
+ 117          
+ 118          BOOL ExectSaturation(void)
+ 119          {
+ 120   1         UpdataPicPara(); 
+ 121   1         return 1;
+ 122   1      }
+ 123          
+ 124          
+ 125          /*****************************************************************
+ 126                                    Item value table
+ 127          *****************************************************************/
+ 128          DrawNumberType CODE Number_Saturation[]=
+ 129          {
+ 130              {0,13,RED,GRAY,RED,GRAY, GetSaturationVal,osdDecNum|osdEnd},
+ 131          };
+ 132          
+ 133          DrawGuageType CODE Gugae_Saturation[]=
+ 134          {
+ 135              {1,1,CYAN,GRAY,CYAN,GRAY, MAX_VALUE,GetSaturationVal,osdEnd},
+ 136          };
+ 137          
+ 138          ItemValueType CODE SaturationMenuItemVal_Saturation[]=
+ 139          {
+ 140               {
+ 141                        Number_Saturation,
+ 142                        Gugae_Saturation,
+ 143                        NULL,   
+ 144                        osdEnd,
+ 145               },
+ 146          };
+ 147          
+ 148          
+ 149          /*****************************************************************
+ 150                                    Item Icon table
+ 151          *****************************************************************/
+ 152          
+ 153          
+ 154          
+ 155          
+ 156          /*****************************************************************
+ 157                                   Item  Titel table
+ 158          *****************************************************************/
+ 159          TitelType CODE SaturationMenuItem_SaturationTitelTab[]=
+ 160          {
+ 161             {0,1,RED,GRAY,RED,GRAY,DWT_Text,SaturationMenu_TitelStr,osdEnd},
+ 162          };
+ 163          
+ 164          /*****************************************************************
+ 165                                    Menu Icon table
+ 166          *****************************************************************/
+ 167          
+ 168          
+ 169          
+ 170          /*****************************************************************
+ 171                                   Menu  Titel table
+C51 COMPILER V9.51   OSD_SATURATIONMENU                                                    09/08/2019 13:51:53 PAGE 4   
+
+ 172          *****************************************************************/
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

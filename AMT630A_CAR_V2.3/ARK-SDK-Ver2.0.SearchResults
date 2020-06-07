@@ -1,0 +1,18 @@
+---- osdDecNum Æ¥Åä (17 in 9 ÎÄ¼þ) ----
+Osd_BrightnessMenu.c (osd):    {0,13,RED,GRAY,RED,GRAY, GetBrightnessVal,osdDecNum|osdEnd},
+Osd_ContrastMenu.c (osd):    {0,14,RED,GRAY,RED,GRAY, GetContrastVal,osdDecNum|osdEnd},
+Osd_FactoryMenu.c (osd):    {3,27,GREEN,TRANSPARENCE,GREEN,TRANSPARENCE, FactoryMenuPicItem_GetBrightnessVal,osdDecNum|osdEnd},
+Osd_FactoryMenu.c (osd):    {4,27,GREEN,TRANSPARENCE,GREEN,TRANSPARENCE, FactoryMenuPicItem_GetContrastVal,osdDecNum|osdEnd},
+Osd_FactoryMenu.c (osd):    {5,27,GREEN,TRANSPARENCE,GREEN,TRANSPARENCE, FactoryMenuPicItem_GetSaturationVal,osdDecNum|osdEnd},
+Osd_FactoryMenu.c (osd):    {6,27,GREEN,TRANSPARENCE,GREEN,TRANSPARENCE, FactoryMenuPicItem_GetOsdXOffsetVal,osdDecNum|osdEnd},
+Osd_FactoryMenu.c (osd):    {7,27,GREEN,TRANSPARENCE,GREEN,TRANSPARENCE, FactoryMenuPicItem_GetOsdYOffsetVal,osdDecNum|osdEnd},
+Osd_FactoryPicMenu.c (osd):    {3,27,GREEN,TRANSPARENCE,YELLOW,TRANSPARENCE, FactoryPicMenu_GetBrightnessVal,osdDecNum|osdEnd},
+Osd_FactoryPicMenu.c (osd):    {4,27,GREEN,TRANSPARENCE,YELLOW,TRANSPARENCE, FactoryPicMenu_GetContrastVal,osdDecNum|osdEnd},
+Osd_FactoryPicMenu.c (osd):    {5,27,GREEN,TRANSPARENCE,YELLOW,TRANSPARENCE, FactoryPicMenu_GetSaturationVal,osdDecNum|osdEnd},
+Osd_FactoryPicMenu.c (osd):    {6,27,GREEN,TRANSPARENCE,YELLOW,TRANSPARENCE, FactoryPicMenu_GetOsdPosXOffsetVal,osdDecNum|osdEnd},
+Osd_FactoryPicMenu.c (osd):    {7,27,GREEN,TRANSPARENCE,YELLOW,TRANSPARENCE, FactoryPicMenu_GetOsdPosYOffsetVal,osdDecNum|osdEnd},
+Osd_Menu.c (osd):	     if(pNumberItem->Flags & osdDecNum)
+Osd_Menu.h (osd):#define osdDecNum       _BIT4
+Osd_SaturationMenu.c (osd):    {0,14,RED,GRAY,RED,GRAY, GetSaturationVal,osdDecNum|osdEnd},
+Osd_TintMenu.c (osd):    {0,14,RED,TRANSPARENCE,RED,TRANSPARENCE, GetTintVal,osdDecNum|osdEnd},
+Osd_VolumeMenu.c (osd):    {0,14,RED,TRANSPARENCE,RED,TRANSPARENCE, GetVolumeVal,osdDecNum|osdEnd},

@@ -1,0 +1,202 @@
+C51 COMPILER V9.51   OSD_TINTMENU                                                          09/08/2019 13:51:53 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE OSD_TINTMENU
+OBJECT MODULE PLACED IN ..\Hex\Osd_TintMenu.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_TintMenu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\
+                    -OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Panne
+                    -ls;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\
+                    -GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device d
+                    -river\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device drive
+                    -r\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_TintMenu.lst) OBJECT(..\Hex\Osd
+                    -_TintMenu.obj)
+
+line level    source
+
+   1          #define _OSD_TINT_MENU_C_
+   2          
+   3          
+   4          
+   5          #include "DataType.h"
+   6          #include "SystemConfig.h"
+   7          #include "Global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+   8          #include "MsgMap.h"
+   9          #include "sysWorkPara.h"
+  10          #include "sysPower.h" 
+  11          #include "videoProc.h"
+  12          #include "configLCDPara.h"
+  13          #include "Debug.h"
+  14          #include "Delay.h"
+  15          #include "AMT_REG.H"
+  16          #include "AMT_Drv.h"
+  17          #include "AMT_MCU.h"
+  18          #include "Osd_Menu.h"
+  19          #include "Osd_MenuPage.h"
+  20          
+  21          
+  22          
+  23          
+  24          /*****************************************************************
+  25                                      Text
+  26          *****************************************************************/
+  27          UCHAR* CODE TintMenuStr[]=
+  28          {
+  29              "TINT", 
+  30              "TINT",
+  31              "TINTA",
+  32              "TINTE",
+  33              "TINT",
+  34              "TINT",
+  35              "TINT",
+  36              "\x010\x024\x007\x025\x010\x007",
+  37              "#\x000#\x00C",
+  38              "#\x000&\x000#\x071",
+  39              "&\x03&\x05             ",//korea
+  40              "TINT", 
+  41              "TINT", 
+  42              "TINT"
+  43          };
+  44          
+  45          
+  46          
+  47          /*****************************************************************
+C51 COMPILER V9.51   OSD_TINTMENU                                                          09/08/2019 13:51:53 PAGE 2   
+
+  48                                      String
+  49          *****************************************************************/
+  50          UCHAR * CODE TintMenu_TitelStr(void)
+  51          {
+  52   1          return TintMenuStr[g_sysSetting.Osd.curlanguage];
+  53   1      }
+  54          
+  55          
+  56          
+  57          /*****************************************************************
+  58                                     Function
+  59          *****************************************************************/
+  60          AdjustType TintMenu_CheckCondition(void)
+  61          {
+  62   1              AdjustType XDATA adjust = {0,0,0};
+  63   1      
+  64   1              if(IsPal())
+  65   1              {
+  66   2                  adjust.Flags |= osdInvisible; 
+  67   2                      //printfStr("Pal");
+  68   2              }
+  69   1              else
+  70   1              {
+  71   2               adjust.Flags |= osdVisible; 
+  72   2                      //printfStr("Ntsc");
+  73   2              }
+  74   1              //printfStr("TintMenu_CheckCondition");
+  75   1              return adjust;
+  76   1      }
+  77          
+  78          
+  79          
+  80          BOOL TintMenuItem_DrawStyle(void)
+  81          {
+  82   1          //printfStr("TintMenuItem_DrawStyle");
+  83   1          OsdWndClear(0X00, 0X00, 0X00, 0X11);
+  84   1          return 0;
+  85   1      }
+  86          
+  87          
+  88          SWORD GetTintVal(void)
+  89          {
+  90   1           //printfStr("GetHueVal");
+  91   1           return g_sysSetting.Video.tint;
+  92   1      }
+  93          
+  94          
+  95          BOOL AdjustTint(UCHAR opratComd)
+  96          {
+  97   1          if(opratComd == COMD_IncValue)
+  98   1          {
+  99   2              
+ 100   2                        if(g_sysSetting.Video.tint<MAX_VALUE)
+ 101   2                        {
+ 102   3                            g_sysSetting.Video.tint++;
+ 103   3                        } 
+ 104   2                        //printf("Inc Value ++ = %d",g_sysSetting.Video.hue);
+ 105   2          }
+ 106   1              if(opratComd == COMD_DecValue)
+ 107   1              {
+ 108   2                  
+ 109   2                        if(g_sysSetting.Video.tint>0)
+C51 COMPILER V9.51   OSD_TINTMENU                                                          09/08/2019 13:51:53 PAGE 3   
+
+ 110   2                        {
+ 111   3                            g_sysSetting.Video.tint--;
+ 112   3                        } 
+ 113   2                       //printf("Dec Value -- =%d",g_sysSetting.Video.hue);
+ 114   2              }
+ 115   1              return 1;
+ 116   1      }
+ 117          
+ 118          
+ 119          BOOL ExectTint(void)
+ 120          {
+ 121   1         UpdataPicPara(); 
+ 122   1         return 1;
+ 123   1      }
+ 124          
+ 125          
+ 126          /*****************************************************************
+ 127                                    Item value table
+ 128          *****************************************************************/
+ 129          DrawNumberType CODE Number_Tint[]=
+ 130          {
+ 131              {0,14,RED,TRANSPARENCE,RED,TRANSPARENCE, GetTintVal,osdDecNum|osdEnd},
+ 132          };
+ 133          
+ 134          
+ 135          DrawGuageType CODE Gugae_Tint[]=
+ 136          {
+ 137              {1,0,WHITE,TRANSPARENCE,WHITE,TRANSPARENCE, MAX_VALUE,GetTintVal,osdEnd},
+ 138          };
+ 139          
+ 140          ItemValueType CODE TintMenuItemVal_Tint[]=
+ 141          {
+ 142               {
+ 143                        Number_Tint,
+ 144                        Gugae_Tint,
+ 145                        NULL,   
+ 146                        osdEnd,
+ 147               },
+ 148          };
+ 149          
+ 150          
+ 151          /*****************************************************************
+ 152                                    Item Icon table
+ 153          *****************************************************************/
+ 154          
+ 155          
+ 156          
+ 157          
+ 158          /*****************************************************************
+ 159                                   Item  Titel table
+ 160          *****************************************************************/
+ 161          TitelType CODE TintMenuItem_TintTitelTab[]=
+ 162          {
+ 163             {0,0,RED,TRANSPARENCE,RED,TRANSPARENCE,DWT_Text,TintMenu_TitelStr,osdEnd},
+ 164          };
+ 165          
+ 166          
+ 167          /*****************************************************************
+ 168                                    Menu Icon table
+ 169          *****************************************************************/
+ 170          
+ 171          
+C51 COMPILER V9.51   OSD_TINTMENU                                                          09/08/2019 13:51:53 PAGE 4   
+
+ 172          
+ 173          /*****************************************************************
+ 174                                   Menu  Titel table
+ 175          *****************************************************************/
+ 176          
+ 177          
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

@@ -1,0 +1,151 @@
+C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN ..\Hex\Main.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Kernel\Main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\OSD;.
+                    -.\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;..
+                    -\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetUs
+                    -erInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device driver
+                    -\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt0
+                    -803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Main.lst) OBJECT(..\Hex\Main.obj)
+
+line level    source
+
+   1          /***********************************************************************
+   2          *Copyright (C) 2005 深圳艾科创新有限公司产品应用一部
+   3          * All rights reserved.
+   4          
+   5          *File name: 　 Main.c
+   6          *Version:    　Ver-2.0
+   7          *Author:       cjinzong
+   8          *update:       2010-05-27
+   9          
+  10          *Description:
+  11                         这个是系统的整个运行框架。
+  12          *History:  
+  13             
+  14          ************************************************************************/
+  15          #define _MAIN_C_
+  16          
+  17          #include "DataType.h"
+  18          #include "SystemConfig.h"
+  19          #include "Global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  20          #include "MsgMap.h"
+  21          #include "Delay.h"
+  22          #include "SysPower.h"
+  23          #include "GetSysMsg.h"
+  24          #include "EventHandle.h"
+  25          #include "Debug.h"
+  26          #include "Mcu.h"
+  27          #include "Interrupt.h"
+  28          #include "Osd_menu.h"
+  29          #include "AMT_Reg.h"
+  30          #include "AMT_Drv.h"
+  31          #include "AMT_Mcu.h"
+  32          
+  33          
+  34          void main(void)                                                                                                                                                                                                            
+  35          {       
+  36   1          DisableWatchdog();
+  37   1                      
+  38   1              InitSystem();
+  39   1                         
+  40   1              printfStr("<<<<<<<<<<<<<<  Welcom to ARK >>>>>>>>>>>>\n");
+  41   1              SetPowerOn();
+  42   1              MenuProcessKey(COMD_SelPowerOnMode);
+  43   1              
+  44   1              printfStr("<<<<<<<<<<<<<<  Enter main loop >>>>>>>>>>>>\n");    
+  45   1              
+  46   1              while(1)
+  47   1              {   
+  48   2                  MSG curMsg;
+C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 2   
+
+  49   2      
+  50   2                      POS_ClearWatchDog();
+  51   2                      
+  52   2      
+  53   2                  /**********SPI驱动屏的VCOM调节*********/
+  54   2                      #ifdef SpiInitPannelEn
+                          #ifdef SpiAdjRegEn 
+                              ES = ON;
+                              POS_AdjustSpiReg();
+                              #endif
+                              #endif
+  60   2      
+  61   2                      
+  62   2              /**********用户输入消息处理*********/
+  63   2                      curMsg = POS_GetUserInputMsg(g_bGetUserInputFlg); 
+  64   2                      if(curMsg != MSG_NULL)
+  65   2                      {
+  66   3                              OsdMsgHandle(curMsg);
+  67   3                              curMsg = MSG_NULL;
+  68   3                      }
+  69   2                      
+  70   2                      /**********输入信号消息处理*********/
+  71   2                      curMsg = POS_GetSignalMsg(g_bGetSignalFlg);
+  72   2              if(curMsg != MSG_NULL)
+  73   2                      {
+  74   3                              SignalMsgHandle(curMsg);
+  75   3                              curMsg = MSG_NULL;
+  76   3                      }
+  77   2                      
+  78   2                      /**********图像制式消息处理*********/
+  79   2                      curMsg = POS_GetColorSysMsg(g_bGetColorSysFlg);
+  80   2              if(curMsg != MSG_NULL)
+  81   2                      {
+  82   3                              ColorSysMsgHandle(curMsg);
+  83   3                              curMsg = MSG_NULL;
+  84   3                      }
+  85   2                      
+  86   2                      /**********时间消息处理*********/
+  87   2                      curMsg = POS_GetTimeMsg(g_bGetTimeFlg);
+  88   2              if(curMsg != MSG_NULL)
+  89   2                      {
+  90   3                              TimeMsgHandle(curMsg); 
+  91   3                              curMsg = MSG_NULL;
+  92   3                      }         
+  93   2                      
+  94   2                      /**********电池ADC消息处理********
+  95   2              curMsg = POS_GetBatteryAdcMsg(g_bGetBatteryAdcFlg);
+  96   2                      if(curMsg != MSG_NULL)
+  97   2                      {
+  98   2                              BatteryAdcMsgHandle(curMsg);
+  99   2                              curMsg = MSG_NULL;
+ 100   2                      }
+ 101   2                      */
+ 102   2                      
+ 103   2                      /*********用户自定义消息处理********/
+ 104   2                      curMsg = POS_GetUserDefinedMsg(g_bGetUserDefFlg); 
+ 105   2                      if(curMsg != MSG_NULL)
+ 106   2                      {
+ 107   3                              UserDefinedMsgHandle(curMsg);
+ 108   3                              curMsg = MSG_NULL;
+ 109   3                      }
+ 110   2      
+C51 COMPILER V9.51   MAIN                                                                  09/08/2019 13:51:43 PAGE 3   
+
+ 111   2                      /**********BT消息处理********
+ 112   2              curMsg = POS_GetBTMsg(g_bGetBTFlg);
+ 113   2                      if(curMsg != MSG_NULL)
+ 114   2                      {
+ 115   2                              BTMsgHandle(curMsg);
+ 116   2                              curMsg = MSG_NULL;
+ 117   2                      }
+ 118   2                      */
+ 119   2                      
+ 120   2                  /**********无法分类消息处理*********/
+ 121   2                      curMsg = POS_GetMiscMsg(g_bGetMiscFlg); 
+ 122   2                      if(curMsg != MSG_NULL)
+ 123   2                      {
+ 124   3                              MiscMsgHandle(curMsg);
+ 125   3                              curMsg = MSG_NULL;
+ 126   3                      }
+ 127   2              }
+ 128   1              return;
+ 129   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

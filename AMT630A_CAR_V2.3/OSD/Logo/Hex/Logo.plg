@@ -1,0 +1,19 @@
+<html>
+<body>
+<pre>
+<h1>礦ision Build Log</h1>
+<h2>Project:</h2>
+E:\AMT630A客户\雅迪\20150605(4D3无信号logo)\新建文件夹\AMT630A_CAR_V2.3_YD_20150605_20150611\OSD\Logo\Prj\Logo.uvproj
+Project File Date:  07/19/2012
+
+<h2>Output:</h2>
+Build target 'Logo'
+compiling Osd_LogoFontDat.c...
+..\Osd_LogoFontDat.c(2950): warning C323: newline expected, extra characters found
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?CO?OSD_LOGOFONTDAT
+*** WARNING L10: CANNOT DETERMINE ROOT SEGMENT
+Program Size: data=0.0 xdata=0 code=5501
+creating hex file from "..\Hex\Logo"...
+"..\Hex\Logo" - 0 Error(s), 3 Warning(s).

@@ -1,0 +1,442 @@
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE EVENTHANDLE
+OBJECT MODULE PLACED IN ..\Hex\EventHandle.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Kernel\EventHandle.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\.
+                    -.\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pan
+                    -nels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\.
+                    -.\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device
+                    - driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device dri
+                    -ver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\EventHandle.lst) OBJECT(..\Hex\Ev
+                    -entHandle.obj)
+
+line level    source
+
+   1          /***********************************************************************
+   2          *Copyright (C) 2005 深圳艾科创新有限公司产品应用一部
+   3          * All rights reserved.
+   4          
+   5          *File name: 　 ArkRun.c
+   6          *Version:    　0.1
+   7          *Author:       cjinzong
+   8          *update:       2011-11-26
+   9          
+  10          *Description:
+  11                        系统各模块运行逻辑。
+  12          *History:  
+  13          
+  14          ************************************************************************/
+  15          #define _EVENT_HANDLE_C_
+  16          
+  17          /* include head files*/
+  18          #include "DataType.h"
+  19          #include "systemConfig.h"
+  20          #include "Global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  21          #include "MsgMap.h"
+  22          #include "Osd_Menu.h"
+  23          #include "Osd_MenuPage.h"
+  24          #include "configLcdPara.h"
+  25          #include "EventHandle.h"
+  26          #include "Debug.h"
+  27          #include "Delay.h"
+  28          #include "VideoProc.h"
+  29          #include "sysPower.h" 
+  30          #include "AMT_REG.h"
+  31          #include "AMT_Drv.h"
+  32          #include "AMT_MCU.h"
+  33          
+  34          
+  35          
+  36          /***********************************************************
+  37          *name:       OsdMsgHandle(MSG curMsg)
+  38          *input:      curMsg
+  39          *output:     void 
+  40          
+  41          *update:     2011-11-27 
+  42          *state:      allright
+  43          
+  44          *description:   
+  45                    处理用户消息，主要是按键和遥控器。
+  46                    需要考虑此处是OSD的接口，并且可以实现OSD的风格切换。
+  47          *history:
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 2   
+
+  48                                          
+  49          ************************************************************/
+  50          void  OsdMsgHandle(MSG curMsg)
+  51          {
+  52   1          UCHAR ucComd= COMD_Nothing;
+  53   1              
+  54   1          ucComd = KeyMsgProcess(curMsg);     
+  55   1              
+  56   1              #ifdef QuickParaSaveEn 
+                      if(ucComd!= COMD_Nothing)
+                      {
+                    g_sysSetting.Osd.storageTime = 0;
+                      }
+                      #endif//QuickParaSaveEn
+  62   1      
+  63   1              #ifdef NoSignalPowerOffEn
+                      if(ucComd!= COMD_Nothing)
+                      {
+                     g_ucContNoSignalSecond = 0X00;
+                      }
+                      #endif
+  69   1              
+  70   1          MenuProcessKey(ucComd);
+  71   1      }
+  72          
+  73          /***********************************************************
+  74          *name:       SignalMsgHandle(MSG curMsg)
+  75          *input:      curMsg
+  76          *output:     void 
+  77          
+  78          *update:     2011-11-27 
+  79          *state:      allright
+  80          
+  81          *description:   
+  82                    处理信号的消息，主要有从无信号到有信号，从有信号到无信号
+  83                    产生的消息，信号优先级消息 等等。。
+  84          *history:
+  85                                          
+  86          ************************************************************/
+  87          void  SignalMsgHandle(MSG curMsg)
+  88          {
+  89   1          if(curMsg == MSG_SIGNAL_OK)
+  90   1          {     
+  91   2                        /*表示有信号*/
+  92   2                    printfStr("MSG_SIGNAL_OK");
+  93   2      
+  94   2                    #ifdef NoSignalEn
+                            ExectComd(COMD_ClearNoSignal); 
+                            #endif//NoSignalEn
+  97   2      
+  98   2                #ifdef LogoEn 
+                        #if ((LOGO_DISP_MODE == NOSIGNAL_DISP_LOGO)||(POWER_ON_NOSIGNAL_DISP_LOGO ==LOGO_DISP_MODE))
+                                  ExectComd(COMD_ClearLogo); 
+                                DelayMs(20);
+                                if(IsSignalOk())
+                              {
+                                      TurnOnBackLight();
+                              }
+                      
+                        #endif
+                        #endif
+ 109   2              #ifdef NoSignalPowerOffEn
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 3   
+
+                     g_ucContNoSignalSecond = 0X00;   
+                      #endif
+ 112   2      
+ 113   2                        #ifdef AudioCtrlEn
+                                OpenAudio();   
+                            #endif//AudioCtrlEn 
+ 116   2      
+ 117   2                        if(IsPowerOn())
+ 118   2                        {
+ 119   3                           MenuProcessKey(COMD_ShowSource);
+ 120   3                        }
+ 121   2          }
+ 122   1      
+ 123   1              
+ 124   1              if(curMsg == MSG_NO_SIGNAL)
+ 125   1              {
+ 126   2                    /*表示无信号*/
+ 127   2                        printfStr("MSG_NO_SIGNAL");
+ 128   2                        
+ 129   2                        #ifdef NoSignalSnowEn
+                                ExectComd(COMD_RedrawSnow); 
+                                #endif
+ 132   2      
+ 133   2                #ifdef LogoEn 
+                        #if ((LOGO_DISP_MODE == NOSIGNAL_DISP_LOGO)||(POWER_ON_NOSIGNAL_DISP_LOGO ==LOGO_DISP_MODE))
+                      TurnOffBackLight();
+                        ExectComd(COMD_RedrawLogo); 
+                        g_sysSetting.Osd.dispTime= 0;
+                        #endif
+                        #endif
+ 140   2              #ifdef NoSignalPowerOffEn
+                     g_ucContNoSignalSecond = 0X00;   
+                      #endif
+ 143   2      
+ 144   2                        #ifdef AudioCtrlEn
+                            SetAudioMute();
+                            #endif//AudioCtrlEn
+ 147   2      
+ 148   2                        if(IsPowerOn())
+ 149   2                        {
+ 150   3      
+ 151   3                      //  if(IsSignalOk())
+ 152   3                        #ifdef LogoEn 
+                                #if ((LOGO_DISP_MODE == NOSIGNAL_DISP_LOGO)||(POWER_ON_NOSIGNAL_DISP_LOGO ==LOGO_DISP_MODE))
+                                #else
+                                   MenuProcessKey(COMD_ShowSource);
+                                #endif
+                                #endif
+ 158   3                        }      
+ 159   2      
+ 160   2              }
+ 161   1      }
+ 162          
+ 163          /***********************************************************
+ 164          *name:       ColorSysMsgHandle(MSG curMsg)
+ 165          *input:      curMsg
+ 166          *output:     void 
+ 167          
+ 168          *update:     2011-11-27 
+ 169          *state:      allright
+ 170          
+ 171          *description:   
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 4   
+
+ 172                   处理图像效果消息，主要是根据当前通道的图像制式来配置
+ 173                   相应的图像参数。 
+ 174          *history:
+ 175                                          
+ 176          ************************************************************/
+ 177          void  ColorSysMsgHandle(MSG curMsg)
+ 178          {
+ 179   1           if(curMsg == MSG_CONFIG_COLOR_SYS)
+ 180   1           {
+ 181   2                       ConfigColorSysDynPara(g_sysSetting.Video.colorSys); 
+ 182   2           }
+ 183   1      }
+ 184          
+ 185          /***********************************************************
+ 186          *name:       TimeMsgHandle(MSG curMsg)
+ 187          *input:      curMsg
+ 188          *output:     void 
+ 189          
+ 190          *update:     2011-11-27 
+ 191          *state:      allright
+ 192          
+ 193          *description:   
+ 194                   处理系统设置时间消息，主要有 定时开关机，定时睡眠模式。
+ 195                   
+ 196          *history:
+ 197                                          
+ 198          ************************************************************/
+ 199          void  TimeMsgHandle(MSG curMsg)
+ 200          {
+ 201   1                              
+ 202   1          if(MSG_OSD_EXIT == curMsg) 
+ 203   1          {   
+ 204   2              printfStr("MSG_OSD_EXIT");
+ 205   2              MenuProcessKey(COMD_OsdExit);
+ 206   2          }
+ 207   1      
+ 208   1              if(MSG_OSD_STORAGE == curMsg) 
+ 209   1          {   
+ 210   2              printfStr("MSG_OSD_STORAGE");
+ 211   2              MenuProcessKey(COMD_OsdStorage);
+ 212   2          }
+ 213   1                      
+ 214   1              if(MSG_NOSIGNALPOWEROFF == curMsg) 
+ 215   1          {   
+ 216   2              printfStr("MSG_NOSIGNALPOWEROFF");
+ 217   2              //MenuProcessKey(COMD_Power);
+ 218   2              TurnOffBackLight();
+ 219   2                      HideMenu();
+ 220   2              //SaveSetting();
+ 221   2          }
+ 222   1      }
+ 223          
+ 224          
+ 225          /***********************************************************
+ 226          *name:       BatteryAdcMsgHandle(MSG curMsg)
+ 227          *input:      curMsg
+ 228          *output:     void 
+ 229          
+ 230          *update:     2011-11-27 
+ 231          *state:      allright
+ 232          
+ 233          *description:   
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 5   
+
+ 234                   处理系统电池的实时电压消息。
+ 235                   
+ 236          *history:
+ 237                                          
+ 238          ************************************************************/
+ 239          void  BatteryAdcMsgHandle(MSG curMsg)
+ 240          {
+ 241   1          if(MSG_BATTERYADC == curMsg) 
+ 242   1          {
+ 243   2              printfStr("MSG_BATTERYADC");
+ 244   2              MenuProcessKey(COMD_BatteryAdc);
+ 245   2          }
+ 246   1      }
+ 247          
+ 248          
+ 249          /***********************************************************
+ 250          *name:       UserDefinedMsgHandle(MSG curMsg)
+ 251          *input:      curMsg
+ 252          *output:     void 
+ 253          
+ 254          *update:     2011-11-27 
+ 255          *state:      allright
+ 256          
+ 257          *description:   
+ 258                  处理用户自定义消息
+ 259                   
+ 260          *history:
+ 261                                          
+ 262          ************************************************************/
+ 263          void  UserDefinedMsgHandle(MSG curMsg)
+ 264          {
+ 265   1          /*关机状态下无倒车*/
+ 266   1          if(MSG_CAR_POF_GO_AHEAD ==  curMsg)
+ 267   1          {
+ 268   2               printfStr("MSG_CAR_POF_GO_AHEAD");
+ 269   2                       g_sysSetting.Car.DetecMode = AV_CAR_NO_SIGANL; 
+ 270   2               g_sysSetting.Car.status = CAR_POF_GO_AHEAD;
+ 271   2                       g_sysSetting.Video.curSource = g_sysSetting.Car.RemberSource;
+ 272   2                       SetPowerOn();
+ 273   2               ExectComd(COMD_Power); 
+ 274   2          }
+ 275   1      
+ 276   1              /*开机状态下无倒车*/
+ 277   1              if(MSG_CAR_PON_GO_AHEAD ==  curMsg)
+ 278   1          {
+ 279   2               printfStr("MSG_CAR_PON_GO_AHEAD");
+ 280   2                       g_sysSetting.Car.DetecMode = AV_CAR_NO_SIGANL; 
+ 281   2               g_sysSetting.Car.status = CAR_PON_GO_AHEAD;
+ 282   2                       //g_sysSetting.Car.RemberSource=INPUT_AV2;
+ 283   2                       g_sysSetting.Video.curSource = g_sysSetting.Car.RemberSource; 
+ 284   2                       SetCarReversingEn();
+ 285   2                       MenuProcessKey(COMD_SelSource);
+ 286   2                       ClrCarReversingEn();
+ 287   2                       if(IsSignalOk())
+ 288   2                       {
+ 289   3                          g_sysSetting.Car.DetecMode = AV_SIGNAL_OK; 
+ 290   3                       }
+ 291   2          }
+ 292   1      
+ 293   1              /*关机状态下倒车*/
+ 294   1              if(MSG_CAR_POF_REVERSING ==  curMsg)
+ 295   1          {
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 6   
+
+ 296   2               printfStr("MSG_CAR_POF_REVERSING");
+ 297   2               g_sysSetting.Video.curSource = INPUT_CAMERA_Car;
+ 298   2                       g_sysSetting.Car.DetecMode = CAR_SIGNAL_OK;
+ 299   2               g_sysSetting.Car.status = CAR_POF_REVERSING;
+ 300   2               SetCarReversingEn();
+ 301   2               ExectComd(COMD_SelSource);
+ 302   2                       ClrCarReversingEn();
+ 303   2                       g_sysSetting.Osd.dispTime= CurrentMenu->TimeOut;
+*** ERROR C199 IN LINE 303 OF ..\..\..\Kernel\EventHandle.c: left side of '->' requires struct/union pointer
+ 304   2          }
+ 305   1      
+ 306   1              /*开机状态下倒车*/
+ 307   1              if(MSG_CAR_PON_REVERSING ==  curMsg)
+ 308   1          {
+ 309   2               printfStr("MSG_CAR_PON_REVERSING");
+ 310   2               g_sysSetting.Video.curSource = INPUT_CAMERA_Car;
+ 311   2                       g_sysSetting.Car.DetecMode = CAR_SIGNAL_OK;
+ 312   2               g_sysSetting.Car.status = CAR_PON_REVERSING;
+ 313   2                       SetCarReversingEn();
+ 314   2               MenuProcessKey(COMD_SelSource);
+ 315   2                       ClrCarReversingEn();
+ 316   2              }
+ 317   1                      
+ 318   1              /*上电状态倒车*/
+ 319   1              if(MSG_PON_REVERSING ==  curMsg)  
+ 320   1              {  
+ 321   2              printfStr("MSG_PON_REVERSING");
+ 322   2                  g_sysSetting.Video.curSource = INPUT_CAMERA_Car;
+ 323   2                  g_sysSetting.Car.DetecMode = CAR_SIGNAL_OK;
+ 324   2              g_sysSetting.Car.status = CAR_PON_REVERSING;
+ 325   2                      SetCarReversingEn();
+ 326   2                  MenuProcessKey(COMD_ShowSource);
+ 327   2                      ClrCarReversingEn();
+ 328   2                  TurnOnBackLight();
+ 329   2          }
+ 330   1      }
+ 331          
+ 332          
+ 333          
+ 334          /***********************************************************
+ 335          *name:       BTMsgHandle(MSG curMsg)
+ 336          *input:      curMsg
+ 337          *output:     void 
+ 338          
+ 339          *update:     2011-11-27 
+ 340          *state:      allright
+ 341          
+ 342          *description:   
+ 343                  处理蓝牙连接、释放，接听、挂断消息。
+ 344                   
+ 345          *history:
+ 346                                          
+ 347          ************************************************************/
+ 348          void  BTMsgHandle(MSG curMsg)
+ 349          {
+ 350   1          #ifdef BTEn
+                      if(MSG_BT_CONN ==  curMsg)
+                      {
+                          printfStr("MSG_BT_CONN");
+                              g_bBTConnFlg = FALSE;
+                          ExectComd(COMD_BTConn);
+                      }
+C51 COMPILER V9.51   EVENTHANDLE                                                           09/08/2019 13:51:47 PAGE 7   
+
+              
+                      if(MSG_BT_DISC ==  curMsg)
+                      {
+                          printfStr("MSG_BT_DISC");
+                              g_bBTDiscFlg = FALSE;
+                          ExectComd(COMD_BTDisc);
+                      }
+              
+                      if(MSG_BT_CALLERID ==  curMsg)
+                      {
+                          printfStr("MSG_BT_CALLERID");
+                              g_bBTCinFlg = FALSE;
+                          ExectComd(COMD_BTCallerID);
+                      }
+              
+                      if(MSG_BT_CALLERDROP ==  curMsg)
+                      {
+                          printfStr("MSG_BT_CALLERDROP");
+                              g_bBTCdropFlg = FALSE;
+                          ExectComd(COMD_BTCallerDrop);
+                      }
+                      #endif
+ 379   1      }
+ 380          
+ 381          
+ 382          
+ 383          /***********************************************************
+ 384          *name:       MiscMsgHandle(MSG curMsg)
+ 385          *input:      curMsg
+ 386          *output:     void 
+ 387          
+ 388          *update:     2011-11-27 
+ 389          *state:      allright
+ 390          
+ 391          *description:   
+ 392                  处理一些不好分类的消息。
+ 393                   
+ 394          *history:
+ 395                                          
+ 396          ************************************************************/
+ 397          void  MiscMsgHandle(MSG curMsg)
+ 398          {   
+ 399   1          if(MSG_TURNON_BACKLIGHT == curMsg) 
+ 400   1          {
+ 401   2              printfStr("MSG_TURNON_BACKLIGHT");              
+ 402   2              ExectComd(COMD_TurnOnBacklight);
+ 403   2          }
+ 404   1              
+ 405   1              if(MSG_TURNOFF_BACKLIGHT == curMsg) 
+ 406   1          {   
+ 407   2              printfStr("MSG_TURNOFF_BACKLIGHT");
+ 408   2              ExectComd(COMD_TurnOffBacklight);
+ 409   2          }  
+ 410   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  2 ERROR(S)

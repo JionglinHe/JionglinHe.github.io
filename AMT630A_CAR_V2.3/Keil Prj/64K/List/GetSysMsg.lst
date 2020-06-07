@@ -1,0 +1,692 @@
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE GETSYSMSG
+OBJECT MODULE PLACED IN ..\Hex\GetSysMsg.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Kernel\GetSysMsg.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\
+                    -OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Panne
+                    -ls;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\
+                    -GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device d
+                    -river\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device drive
+                    -r\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\GetSysMsg.lst) OBJECT(..\Hex\GetSys
+                    -Msg.obj)
+
+line level    source
+
+   1          /***********************************************************************
+   2          *Copyright (C) 2005 深圳艾科创新有限公司产品应用一部
+   3          * All rights reserved.
+   4          
+   5          *File name: 　 GetSysMsg.c
+   6          *Version:    　0.1
+   7          *Author:       cjinzong
+   8          *update:       2011-12-09
+   9          
+  10          *Description:
+  11                       此文件是系统采集信息，系统所有的信息发出都由此文件发出。
+  12          *History:  
+  13          
+  14          ************************************************************************/
+  15          #define _GET_MSG_C_
+  16          
+  17          #include "DataType.h"
+  18          #include "systemConfig.h"
+  19          #include "global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  20          #include "MsgMap.h"
+  21          #include "debug.h"
+  22          #include "mcu.h"
+  23          #include "GetUserInputMsg.h"
+  24          #include "GetSysMsg.h"
+  25          #include "ConfigLcdPara.h"
+  26          #include "interrupt.h"
+  27          #include "delay.h"
+  28          #include "Osd_Menu.h"
+  29          #include "Osd_MenuPage.h"
+  30          #include "sysPower.h"
+  31          #include "AMT_REG.h"
+  32          #include "AMT_Drv.h"
+  33          #include "AMT_MCU.h"
+  34          #include "BatteryAdc.h"
+  35          #include "BT_UartRec.h"
+  36          
+  37          
+  38          /***********************************************************
+  39          *name:       POS_GetUserInputMsg(timeflg)
+  40          *input:      timeflg  //定时时间标志
+  41          *output:     void 
+  42          *update:     2011-11-27 
+  43          *state:      allright
+  44          
+  45          *description:   
+  46                    获取用户输入信息，主要有按键和遥控两种信息。
+  47                    
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 2   
+
+  48          *history:
+  49          
+  50          ************************************************************/
+  51          MSG POS_GetUserInputMsg(FLAG timer)
+  52          {
+  53   1          MSG XDATA curInputMsg = MSG_NULL;
+  54   1              
+  55   1              if(timer)
+  56   1              {
+  57   2                  g_bGetUserInputFlg = 0;
+  58   2                      
+  59   2                  #ifdef IrDetectEn
+                              curInputMsg = POS_GetIrMsg();
+                              if(curInputMsg != MSG_NULL)
+                              {
+                                  return curInputMsg;
+                              }
+                              #endif
+  66   2                      
+  67   2                      #ifdef KeyDetectEn
+  68   2                      curInputMsg = POS_GetKeyPadMsg();
+  69   2                      if(curInputMsg != MSG_NULL)
+  70   2                      {                       
+  71   3                          return curInputMsg;
+  72   3                      }
+  73   2                      #endif
+  74   2              }
+  75   1              return MSG_NULL;
+  76   1      }
+  77          
+  78          
+  79          
+  80          /***********************************************************
+  81          *name:       POS_GetSignalMsg(timeflg)
+  82          *input:      timeflg  //定时时间标志
+  83          *output:     void 
+  84          *update:     2011-11-27 
+  85          *state:      allright
+  86          
+  87          *description:   
+  88                    获取信号状态消息。主要是检测信号有无，信号强弱等状态。
+  89                    
+  90          *history:
+  91          
+  92          ************************************************************/
+  93          MSG POS_GetSignalMsg(FLAG timer)
+  94          {
+  95   1      #define DetecTimes   20
+  96   1      
+  97   1              static UCHAR XDATA ucCont = 0;
+  98   1              static FLAG   bSignalFlg = FALSE;
+  99   1              
+ 100   1              if(timer)
+ 101   1              {
+ 102   2                  g_bGetSignalFlg = 0;
+ 103   2                      
+ 104   2              //有无信号检测
+ 105   2                      if(bSignalFlg == ((COLOR_SYS_TV_ACTIVE&_BIT1)>>1))
+ 106   2                      {   
+ 107   3                              if(ucCont<DetecTimes)
+ 108   3                              {
+ 109   4                                  ucCont++; 
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 3   
+
+ 110   4                                      if(ucCont == DetecTimes)
+ 111   4                                      {
+ 112   5                                           if(bSignalFlg)
+ 113   5                                           {   
+ 114   6                                               return MSG_SIGNAL_OK; //可靠有信号
+ 115   6                                           }
+ 116   5                                               else
+ 117   5                                               {   
+ 118   6                                                   return MSG_NO_SIGNAL;//无信号
+ 119   6                                               }
+ 120   5                                      }
+ 121   4                              }
+ 122   3                      }
+ 123   2                      else
+ 124   2                      {
+ 125   3                          ucCont = 0; 
+ 126   3                          bSignalFlg = (COLOR_SYS_TV_ACTIVE&_BIT1)>>1;
+ 127   3                      }
+ 128   2              }
+ 129   1              return MSG_NULL;
+ 130   1      }
+ 131          
+ 132          
+ 133          /***********************************************************
+ 134          *name:       POS_GetColorSysMsg(timeflg)
+ 135          *input:      timeflg  //定时时间标志
+ 136          *output:     void 
+ 137          *update:     2011-11-27 
+ 138          *state:      allright
+ 139          
+ 140          *description:   
+ 141                    获取图像制式信息，例如PAL/NTSC/SECAM的切换，配置图像效果。
+ 142                    
+ 143          *history:
+ 144          
+ 145          ************************************************************/
+ 146          MSG POS_GetColorSysMsg(FLAG timer)
+ 147          {
+ 148   1              if(timer)
+ 149   1              {
+ 150   2                      g_bGetColorSysFlg = 0;
+ 151   2                      
+ 152   2                  if((g_ucColorSys != g_ucPreColorSys))
+ 153   2                  {
+ 154   3                      g_ucPreColorSys = g_ucColorSys;
+ 155   3                              if(g_ucColorSys != NULL_SYS)  
+ 156   3                      {
+ 157   4                              g_sysSetting.Video.colorSys = g_ucColorSys;
+ 158   4                                      printf("g_sysSetting.Video.colorSys =%x", g_sysSetting.Video.colorSys);
+ 159   4                                      if(g_sysSetting.Video.colorSys < AUTO)
+ 160   4                                      {
+ 161   5                                           return MSG_CONFIG_COLOR_SYS; 
+ 162   5                          }
+ 163   4                                      else
+ 164   4                                      {
+ 165   5                                           return MSG_NULL;
+ 166   5                                      }
+ 167   4                      }
+ 168   3                  }
+ 169   2              }
+ 170   1              return MSG_NULL;    
+ 171   1      }
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 4   
+
+ 172          
+ 173          
+ 174          
+ 175          /***********************************************************
+ 176          *name:       POS_GetTimeMsg(timeflg)
+ 177          *input:      timeflg  //定时时间标志
+ 178          *output:     void 
+ 179          *update:     2011-11-27 
+ 180          *state:      allright
+ 181          
+ 182          *description:   
+ 183                    获取系统时间消息。例如定时任务。
+ 184                    
+ 185          *history:
+ 186          
+ 187          ************************************************************/
+ 188          MSG POS_GetTimeMsg(FLAG timer)
+ 189          {
+ 190   1      #define NoSyncTime          10
+ 191   1      
+ 192   1              if(timer)
+ 193   1              {  
+ 194   2                      g_bGetTimeFlg = 0;
+ 195   2                      
+ 196   2                      if(g_sysSetting.Osd.dispTime>0)
+ 197   2                      {   
+ 198   3                          if(--g_sysSetting.Osd.dispTime == 0)
+ 199   3                          {    
+ 200   4                               /*在此判断是否需要退出OSD 还是需要显示LOGO或其他菜单*/
+ 201   4                       return MSG_OSD_EXIT;
+ 202   4                          }
+ 203   3                      }
+ 204   2      
+ 205   2                      #ifdef QuickParaSaveEn 
+                      if(g_sysSetting.Osd.storageTime < OSD_STORAGE_TIME)  
+                      {
+                                      if(++g_sysSetting.Osd.storageTime == OSD_STORAGE_TIME)
+                          {
+                              /*在此判断是否需要记忆OSD数据*/
+                              return(MSG_OSD_STORAGE);
+                          }
+                      }
+                              #endif
+ 215   2                      
+ 216   2                      #ifdef NoSignalPowerOffEn
+                              #define NoSignalSecond          5
+                              if(IsPowerOn()&&!IsSignalOk()&&g_bBackLightFlg)
+                              {
+                                      if(POS_SysTimeDriver())
+                                      {
+                                          if(g_ucContBufSecond >= 1)
+                                          {
+                                              g_ucContBufSecond -= 1;
+                                                      g_ucContNoSignalSecond++;
+              
+                                                  if(g_ucContNoSignalSecond >= NoSignalSecond)
+                                                      {
+                                                          return MSG_NOSIGNALPOWEROFF;
+                                                      }
+                                          }
+                                      }
+                              }
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 5   
+
+                              else
+                              {
+                                  g_ucContNoSignalSecond = 0X00;
+                              }
+                              #endif
+ 239   2              }
+ 240   1              return MSG_NULL;       
+ 241   1      }
+ 242          
+ 243          
+ 244          /***********************************************************
+ 245          *name:       POS_GetBatteryAdcMsg(timeflg)
+ 246          *input:      timeflg  //定时时间标志
+ 247          *output:     void 
+ 248          *update:     2011-11-27 
+ 249          *state:      allright
+ 250          
+ 251          *description:   
+ 252                    获取系统电池的实时电压消息。
+ 253                    
+ 254          *history:
+ 255          
+ 256          ************************************************************/
+ 257          MSG POS_GetBatteryAdcMsg(FLAG timer)
+ 258          {
+ 259   1      
+ 260   1              UINT  XDATA curBatteryAdcVal = NULL_BATTERYADC;
+ 261   1      
+ 262   1          if(timer)
+ 263   1          {
+ 264   2              g_bGetBatteryAdcFlg = 0;
+ 265   2                      
+ 266   2                      #ifdef LowBaterryDetecEn 
+                              curBatteryAdcVal = POS_GetBatteryAdcValue();
+                              if(NULL_BATTERYADC != curBatteryAdcVal)
+                              {
+                           g_ucBatteryAdcVal = curBatteryAdcVal & 0X00FF; 
+                           return MSG_BATTERYADC;
+                              }
+                              #endif
+ 274   2                      
+ 275   2          }
+ 276   1          return MSG_NULL;  
+ 277   1      }
+ 278          
+ 279          
+ 280          /***********************************************************
+ 281          *name:       POS_GetUserDefinedMsg(timeflg)
+ 282          *input:      timeflg  //定时时间标志
+ 283          *output:     void 
+ 284          *update:     2011-11-27 
+ 285          *state:      allright
+ 286          
+ 287          *description:   
+ 288                   获取用户自定义消息，例如一些IO的状态 等等实时采样消息。
+ 289                    
+ 290          *history:
+ 291          
+ 292          ************************************************************/
+ 293          MSG POS_GetUserDefinedMsg(FLAG timer)
+ 294          {
+ 295   1      #define IsCarReversing()                ((COMPHV_DETECT & _BIT6) == _BIT6)
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 6   
+
+ 296   1      
+ 297   1          static FLAG   s_bAvCarNoSignalFlg = TRUE;
+ 298   1                      
+ 299   1              if((timer)&&(!IsFactoryEn()))
+ 300   1              {
+ 301   2                      #ifdef CarBackEn
+ 302   2                      #ifdef CarReversingSignalDetectEn
+ 303   2                      g_bGetUserDefFlg = 0;
+ 304   2              
+ 305   2                      if(g_sysSetting.Car.RemberSource == INPUT_CAMERA_Car)  //倒车通道
+ 306   2                      {
+ 307   3                   if(IsCarReversing())
+ 308   3                   {
+ 309   4                           SelVideoDevice(INPUT_CAMERA_Car);
+ 310   4                                       if(g_sysSetting.Power.status == POWER_OFF)
+ 311   4                                       {
+ 312   5                                   if(g_sysSetting.Car.status != CAR_POF_REVERSING)
+ 313   5                                   {
+ 314   6                                        return MSG_CAR_POF_REVERSING;
+ 315   6                                   }
+ 316   5                                       }
+ 317   4                                       else
+ 318   4                                       {
+ 319   5                                           if(g_sysSetting.Car.status != CAR_PON_REVERSING)
+ 320   5                                   {   
+ 321   6                                        return MSG_CAR_PON_REVERSING;
+ 322   6                                   }
+ 323   5                                       }
+ 324   4                   }
+ 325   3                   else
+ 326   3                   {
+ 327   4                           if(!IsSignalOk())
+ 328   4                           {
+ 329   5                             SelCarSOGIn();
+ 330   5                                         SelNullChannel();
+ 331   5                                         if(g_sysSetting.Power.status == POWER_OFF)
+ 332   5                                         {
+ 333   6                                     if(g_sysSetting.Car.status != CAR_POF_GO_AHEAD)
+ 334   6                                     {  
+ 335   7                                         s_bAvCarNoSignalFlg = TRUE;
+ 336   7                                         return MSG_CAR_POF_GO_AHEAD;
+ 337   7                                     }
+ 338   6                                         }
+ 339   5                                         else
+ 340   5                                         {
+ 341   6                                             if(g_sysSetting.Car.status != CAR_PON_GO_AHEAD)
+ 342   6                                     {
+ 343   7                                        s_bAvCarNoSignalFlg = TRUE;
+ 344   7                                        return MSG_CAR_PON_GO_AHEAD;
+ 345   7                                     }
+ 346   6                                         }
+ 347   5                           }
+ 348   4                                       else
+ 349   4                                       {
+ 350   5                                             if(g_sysSetting.Power.status == POWER_OFF)
+ 351   5                             {
+ 352   6                                      if(g_sysSetting.Car.status != CAR_POF_REVERSING)
+ 353   6                                      {
+ 354   7                                          return MSG_CAR_POF_REVERSING;
+ 355   7                                      }
+ 356   6                             }
+ 357   5                                                 else
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 7   
+
+ 358   5                             {
+ 359   6                                     if(g_sysSetting.Car.status != CAR_PON_REVERSING)
+ 360   6                                     {   
+ 361   7                                         return MSG_CAR_PON_REVERSING;
+ 362   7                                     }
+ 363   6                             }
+ 364   5                                       }
+ 365   4                   }
+ 366   3                      }
+ 367   2                      else //非倒车通道
+ 368   2                      {
+ 369   3                              switch(g_sysSetting.Car.DetecMode)
+ 370   3                              {
+ 371   4                                      case AV_CAR_NO_SIGANL:  
+ 372   4                                                if(s_bAvCarNoSignalFlg)
+ 373   4                                                {
+ 374   5                                                  s_bAvCarNoSignalFlg = FALSE;
+ 375   5                                             if(IsCarReversing())
+ 376   5                                            {
+ 377   6                                               g_sysSetting.Car.DetecMode = AV_SIGNAL_OK;
+ 378   6                                                SelVideoDevice(INPUT_AV1);
+ 379   6                                                         
+ 380   6                                                         #ifdef NoSignalBLOffEn 
+ 381   6                                      
+ 382   6                                                         ExitLowPowerMode();
+ 383   6                                                         DelayMs(200 );
+ 384   6                                                              printfStr("TurnOnBackLight 222");
+ 385   6                                                         TurnOnBackLight();
+ 386   6                                                         #else
+                                                                 DelayMs(400);        
+                                                                 #endif
+ 389   6                                              }
+ 390   5                                                      else
+ 391   5                                                      {  
+ 392   6                                                         SelCarSOGIn();
+ 393   6                                                         SelAv1Channel();
+ 394   6                                                      }
+ 395   5                                                 }
+ 396   4                                                else
+ 397   4                                                {
+ 398   5                                                  s_bAvCarNoSignalFlg = TRUE;
+ 399   5                                                  SelCarSOGIn();
+ 400   5                                                  SelAv1Channel();
+ 401   5                                                  if(IsCarReversing())
+ 402   5                                                  {    
+ 403   6                                                               if(g_sysSetting.Power.status == POWER_ON)
+ 404   6                                                               {                                                               
+ 405   7                                       g_sysSetting.Car.status = CAR_PON_REVERSING;
+ 406   7                                       g_sysSetting.Car.DetecMode = CAR_SIGNAL_OK;
+ 407   7                                       g_sysSetting.Video.curSource = INPUT_CAMERA_Car;
+ 408   7                                       SelVideoDevice(INPUT_CAMERA_Car);
+ 409   7                                                                       
+ 410   7                                       #ifdef NoSignalBLOffEn 
+ 411   7                                                                       OsdHide();
+ 412   7                                                                        
+ 413   7                                                                             
+ 414   7                                    
+ 415   7                                       ExitLowPowerMode();
+ 416   7                                               DelayMs(200);          
+ 417   7                                       TurnOnBackLight();
+ 418   7                                      printfStr("TurnOnBackLight 111");
+ 419   7                                       #else
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 8   
+
+                                               DelayMs(400);  
+                                               #endif
+ 422   7                                                               }
+ 423   6                                                               else
+ 424   6                                                               {
+ 425   7                                                                       return MSG_CAR_POF_REVERSING;
+ 426   7                                                               }
+ 427   6                                                  }
+ 428   5                                                  else
+ 429   5                                                  {
+ 430   6                                                    SelAvSOGIn();
+ 431   6                                                        SelCarChannel();
+ 432   6                                                  }
+ 433   5                                               }
+ 434   4                                              break;
+ 435   4      
+ 436   4                                case AV_SIGNAL_OK:    
+ 437   4                                      
+ 438   4                                              SelCarSOGIn();
+ 439   4                                          SelAv1Channel();
+ 440   4                                              if(IsCarReversing())
+ 441   4                                              {
+ 442   5                                                       if(g_sysSetting.Power.status == POWER_ON)
+ 443   5                                                       {
+ 444   6                                                               return MSG_CAR_PON_REVERSING;
+ 445   6                                                       }
+ 446   5                                                       else
+ 447   5                                                       {
+ 448   6                                                               return MSG_CAR_POF_REVERSING;
+ 449   6                                                       }
+ 450   5                                              }
+ 451   4                                              else
+ 452   4                                              {       
+ 453   5                                                      if(!IsSignalOk())
+ 454   5                                                      {       
+ 455   6                                                          g_sysSetting.Car.DetecMode = AV_CAR_NO_SIGANL;
+ 456   6                                                              
+ 457   6                                                          #ifdef NoSignalBLOffEn 
+ 458   6                                                      
+ 459   6                                      TurnOffBackLight();
+ 460   6                                                              EnterLowPowerMode();
+ 461   6                                      #endif
+ 462   6                                                      }
+ 463   5                                              }                                       
+ 464   4                                              break;
+ 465   4                                              
+ 466   4                                 case CAR_SIGNAL_OK:
+ 467   4                                      #if 1
+ 468   4                                               if(!IsSignalOk())
+ 469   4                                      
+ 470   4                                               {
+ 471   5                                                      if(g_sysSetting.Power.status == POWER_ON)
+ 472   5                                                      {
+ 473   6                                                              if(g_sysSetting.Car.RemberSource != g_sysSetting.Video.curSource)
+ 474   6                                                              {     
+ 475   7                                                                   s_bAvCarNoSignalFlg = TRUE;
+ 476   7                                                                       return MSG_CAR_PON_GO_AHEAD;   
+ 477   7                                                              }
+ 478   6                                                      }
+ 479   5                                                      else
+ 480   5                                                      {
+ 481   6                                                              if(g_sysSetting.Car.RemberSource != g_sysSetting.Video.curSource)
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 9   
+
+ 482   6                                                              {   
+ 483   7                                                                   s_bAvCarNoSignalFlg = TRUE;
+ 484   7                                                                       return MSG_CAR_POF_GO_AHEAD;     
+ 485   7                                                              }
+ 486   6                                                      }
+ 487   5                                               }
+ 488   4                                               #endif
+ 489   4                                               break;
+ 490   4                                       
+ 491   4                                 case PON_CAR_SIGNAL_OK:
+ 492   4                                               return MSG_PON_REVERSING; 
+ 493   4                                               break;
+ 494   4                               
+ 495   4                                 default:
+ 496   4                                              break;
+ 497   4                                                      
+ 498   4                              }
+ 499   3      
+ 500   3                      }               
+ 501   2                      #endif
+ 502   2                      
+ 503   2                      #ifdef CarReversingIODetectEn
+                              #define ContIOState   10
+                          static FLAG LastIOState = hw_setCarBackAheadStatus;  
+                          static UCHAR XDATA IOStateCnt=ContIOState;
+                          FLAG   CurrentIOStatus;
+              
+                              g_bGetUserDefFlg = 0;
+                              
+                              CurrentIOStatus = hw_getCarBackPinStatus();
+                              
+                              if(CurrentIOStatus != LastIOState)
+                              {
+                                 LastIOState = CurrentIOStatus;
+                         IOStateCnt = 0;
+                              }
+                      else
+                              {
+                          if(IOStateCnt < ContIOState)
+                                  {
+                             if(++IOStateCnt == ContIOState)
+                                         {
+                             
+                                if(CurrentIOStatus != hw_setCarBackAheadStatus)
+                                                {
+                                   //printfStr("CarReversing......");
+                                   if(g_sysSetting.Power.status == POWER_ON)
+                                                   {   
+                                       return MSG_CAR_PON_REVERSING;
+                                                   }
+                                                       else
+                                                       {   
+                                                           return MSG_CAR_POF_REVERSING;
+                                                       }
+                                                }
+                                                else
+                                                {
+                                                          //printfStr("Go Ahead......");
+                                                          if(g_sysSetting.Power.status == POWER_ON)
+                                                          {
+                                                                 return MSG_CAR_PON_GO_AHEAD; 
+                                                              }
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 10  
+
+                                                         else
+                                                         {
+                                             return MSG_CAR_POF_GO_AHEAD;     
+                                                         }
+                                                }                                     
+                                      }
+                          }
+                      }
+                              #endif  
+ 553   2                      #else
+                              g_bGetUserDefFlg = 0;
+                              #endif
+ 556   2              }
+ 557   1              return MSG_NULL;  
+ 558   1      }
+ 559          
+ 560          
+ 561          
+ 562          
+ 563          /***********************************************************
+ 564          *name:       POS_GetBTMsg(timeflg)
+ 565          *input:      timeflg  //定时时间标志
+ 566          *output:     void 
+ 567          *update:     2011-11-27 
+ 568          *state:      allright
+ 569          
+ 570          *description:   
+ 571                    获取BT连接、释放，接听、挂断的消息。
+ 572                    
+ 573          *history:
+ 574          
+ 575          ************************************************************/
+ 576          MSG POS_GetBTMsg(FLAG timer)
+ 577          {
+ 578   1         if(timer)
+ 579   1         {
+ 580   2             g_bGetBTFlg = 0;
+ 581   2                 
+ 582   2             #ifdef BTEn
+                     if(g_bBTConnFlg)
+                     {
+                      return MSG_BT_CONN;
+                     }
+                     
+                     if(g_bBTDiscFlg)
+                     {
+                      return MSG_BT_DISC;
+                     }
+                     
+                     if(g_bBTCinFlg)
+                     {
+                      return MSG_BT_CALLERID;
+                     }
+                     
+                     if(g_bBTCdropFlg)
+                     {
+                      return MSG_BT_CALLERDROP;
+                     }
+                         #endif
+ 603   2         }
+ 604   1         return MSG_NULL; 
+ 605   1      }
+C51 COMPILER V9.51   GETSYSMSG                                                             09/08/2019 13:51:44 PAGE 11  
+
+ 606          
+ 607          
+ 608          
+ 609          /***********************************************************
+ 610          *name:       POS_GetMiscMsg(timeflg)
+ 611          *input:      timeflg  //定时时间标志
+ 612          *output:     void 
+ 613          *update:     2011-11-27 
+ 614          *state:      allright
+ 615          
+ 616          *description:   
+ 617                    获取杂类消息，主要由一些不能分类的消息。
+ 618                    
+ 619          *history:
+ 620          
+ 621          ************************************************************/
+ 622          MSG POS_GetMiscMsg(FLAG timer)
+ 623          {
+ 624   1              if(timer)
+ 625   1              {
+ 626   2                      g_bGetMiscFlg = 0;
+ 627   2      
+ 628   2                      #ifdef BL_OvpSoftProtecEn 
+                              if(g_bReleaseAdcKeyFlg)
+                              {
+                                  #define BLOvpSofProtec    3
+                                  static UCHAR XDATA BLOvpSofProtecStateCnt = 0;
+                                      
+                                  if(POS_EnableChipAdc(ADC_DETEC_CH) > ProtecVolteAdcVal(ProtecVolte))
+                                      {
+                                          BLOvpSofProtecStateCnt++;
+                                      }
+                                      else
+                                      {
+                                         BLOvpSofProtecStateCnt = 0;
+                                      }
+                          if(BLOvpSofProtecStateCnt >= BLOvpSofProtec)
+                          {
+                             return MSG_TURNOFF_BACKLIGHT;
+                          }
+                              }
+                              #endif
+ 648   2              }
+ 649   1              return MSG_NULL;  
+ 650   1      }
+ 651          
+ 652          
+ 653          
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

@@ -1,0 +1,266 @@
+C51 COMPILER V9.51   INTERRUPT                                                             09/08/2019 13:51:47 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE INTERRUPT
+OBJECT MODULE PLACED IN ..\Hex\Interrupt.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\Kernel\Interrupt.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\
+                    -OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Panne
+                    -ls;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\
+                    -GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device d
+                    -river\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device drive
+                    -r\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Interrupt.lst) OBJECT(..\Hex\Interr
+                    -upt.obj)
+
+line level    source
+
+   1          /*******************************************************************************
+   2          *Copyright (C) 2005 深圳艾科创新有限公司产品应用一部
+   3          * All rights reserved.
+   4          
+   5          *File name: 　 Interrupt.c        
+   6          *Version:      1.0
+   7          *update:       2011-12-10
+   8          *Description:
+   9                             系统中断处理。
+  10                             
+  11          *History:  jordan.chen  2011/12/10    1.0    build  this  moudle
+  12          ******************************************************************************/
+  13          #define _INTERRUPT_C_
+  14          
+  15          #include "DataType.h"
+  16          #include "systemConfig.h"
+  17          #include "global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  18          #include "Debug.h"
+  19          #include "mcu.h"
+  20          #include "MsgMap.h"
+  21          #include "Ir.h"
+  22          #include "delay.h"
+  23          #include "AMT_MCU.h"
+  24          #include "AMT_Drv.h"
+  25          #include "AMT_REG.h"
+  26          #include "BT_UartRec.h"
+  27          #include "interrupt.h"
+  28          #include "Osd_Menu.h"
+  29          #include "Osd_MenuPage.h"
+  30          
+  31          
+  32          
+  33          void POS_IrqServerExt0(void) interrupt 0 //ext 0  IR  interrupt
+  34          {
+  35   1      #ifdef IrDetectEn
+                  /*通讯协议选择*/
+                  #if IR_DECODE_MODE == IR_HARDWARE
+                  #if IR_TYPE == NEC
+                      g_ucRemoteKeyVal = POS_GetIrKeyVal();
+                      #endif
+                      #endif
+              #endif
+  43   1      }
+  44          
+  45          
+  46          void POS_IrqServerRec(void) interrupt 4  //Uart Receive interrupt
+  47          {
+C51 COMPILER V9.51   INTERRUPT                                                             09/08/2019 13:51:47 PAGE 2   
+
+  48   1      
+  49   1         #ifdef BTEn
+                 POS_BTUartRec();
+                 #endif
+  52   1      
+  53   1         #ifdef SpiInitPannelEn
+                 #ifdef SpiAdjRegEn
+                 POS_RecUartSpiInfor();
+                 #endif
+                 #endif
+  58   1      
+  59   1      }
+  60          
+  61          void POS_IrqServerExt2(void) interrupt 8//ext 2  ADC  interrupt
+  62          {   
+  63   1              /*外部中断2设置*/
+  64   1              EXIF = EXIF&0xEF;       //IE2 = 0
+  65   1      
+  66   1          //adc status
+  67   1              ADC_INT_STATUS_L =0X00;
+  68   1          ADC_INT_STATUS_H =0X00;
+  69   1      }
+  70          
+  71          
+  72          
+  73          void POS_IrqServerExt3(void) interrupt 9//ext 3
+  74          {   
+  75   1              /*外部中断3设置*/
+  76   1              EXIF = EXIF&0xDF; //IE3 = 0
+  77   1      }
+  78          
+  79          
+  80          void POS_IrqServerExt4(void) interrupt 10//ext 4
+  81          {   
+  82   1          /*外部中断4设置*/
+  83   1              EXIF = EXIF&0xBF;       //IE4 = 0
+  84   1      }
+  85          
+  86          
+  87          
+  88          void POS_IrqServerExt5(void) interrupt 11//ext 5  OSD VSYN interrupt
+  89          {   
+  90   1      
+  91   1          /*外部中断5设置*/
+  92   1              EXIF = EXIF&0x7F; //IE5 = 0
+  93   1      }
+  94          
+  95          
+  96          void POS_IrqServerTimer0(void) interrupt 1  //timer 0
+  97          {   
+  98   1          TR0  = OFF;
+  99   1              SetTimer0(_us(560)); 
+ 100   1              TR0  = ON;      
+ 101   1      }
+ 102          
+ 103          
+ 104          /***********************************************************
+ 105          *name:       IrqServerTimer1(void)
+ 106          *input:      non
+ 107          *output:     对系统的实时事件进行检测.
+ 108          *update:     2011-12-23 
+ 109          *state:      try out
+C51 COMPILER V9.51   INTERRUPT                                                             09/08/2019 13:51:47 PAGE 3   
+
+ 110          
+ 111          *description:  
+ 112                   对系统的实时事件进行检测，并置事件标志。
+ 113          *NOTE:
+ 114                   这个计数器可以从0-255分频
+ 115          *history:
+ 116          ************************************************************/
+ 117          void POS_IrqServerTimer1(void) interrupt 3         //timer 1
+ 118          {  
+ 119   1          static UCHAR s_ucSysTimer;
+ 120   1              
+ 121   1          TR1  = OFF;
+ 122   1              SetTimer1(_ms(5));
+ 123   1              TR1  = ON;
+ 124   1      
+ 125   1              s_ucSysTimer++; 
+ 126   1              
+ 127   1              /**********弱信号处理*********/
+ 128   1              POS_VideoProcess(VdLibCmd);
+ 129   1      
+ 130   1              if(Is5ms(s_ucSysTimer)) 
+ 131   1              {
+ 132   2                  HFZ_LR_BLANK_WR = 0X00;
+ 133   2              }
+ 134   1              
+ 135   1              if(Is10ms(s_ucSysTimer)) 
+ 136   1              {  
+ 137   2                  g_bGetUserInputFlg = 1;
+ 138   2                      g_bGetBatteryAdcFlg = 1;
+ 139   2                  g_bGetSignalFlg = 1;   
+ 140   2      
+ 141   2                      #ifdef CarBackEn
+ 142   2                      #ifdef CarReversingIODetectEn 
+                          g_bGetUserDefFlg = 1;
+                              #endif
+ 145   2                      #endif
+ 146   2              }
+ 147   1              
+ 148   1              if(Is20ms(s_ucSysTimer))
+ 149   1              {   
+ 150   2                  g_bGetColorSysFlg = 1;
+ 151   2                      g_bGetMiscFlg = 1;
+ 152   2                      g_bGetBTFlg = 1;
+ 153   2              }
+ 154   1              
+ 155   1              if(Is30ms(s_ucSysTimer))
+ 156   1              {
+ 157   2                  g_bGetTimeFlg = 1;
+ 158   2              }
+ 159   1      
+ 160   1              if(Is100ms(s_ucSysTimer))//100
+ 161   1              {   
+ 162   2                      #ifdef CarBackEn
+ 163   2                      #ifdef CarReversingSignalDetectEn
+ 164   2                      g_bGetUserDefFlg = 1;   
+ 165   2              #endif
+ 166   2                      #endif
+ 167   2              }
+ 168   1              
+ 169   1              /**********图像制式消息处理*********/
+ 170   1              if(g_bGetColorSysFlg)
+ 171   1              {
+C51 COMPILER V9.51   INTERRUPT                                                             09/08/2019 13:51:47 PAGE 4   
+
+ 172   2              #define StableTimes   5
+ 173   2      
+ 174   2                      static UCHAR  s_ucPreSys = PAL;
+ 175   2                      UCHAR  ucCurSys;
+ 176   2              
+ 177   2                  if(IsSignalOk()||(0XFF == g_ucColorSys))
+ 178   2                      {
+ 179   3                         ucCurSys = GetSignalSys();
+ 180   3                         if(ucCurSys != s_ucPreSys)
+ 181   3                     {
+ 182   4                        s_ucPreSys = ucCurSys;
+ 183   4                        g_ucStableTime = 0;
+ 184   4                     }
+ 185   3                         else
+ 186   3                         {
+ 187   4                             if(g_ucStableTime < StableTimes)
+ 188   4                                 {
+ 189   5                             if(++g_ucStableTime == StableTimes)
+ 190   5                             {
+ 191   6                                switch(ucCurSys)
+ 192   6                                {
+ 193   7                                    case 0X00:
+ 194   7                                                               ucCurSys = NTSC;
+ 195   7                                                               break;
+ 196   7      
+ 197   7                                                        case 0X01:
+ 198   7                                                               ucCurSys = PAL;
+ 199   7                                                               break;
+ 200   7      
+ 201   7                                                        default:
+ 202   7                                                               ucCurSys = PAL;
+ 203   7                                                               break;
+ 204   7                                }
+ 205   6                                               g_ucColorSys = ucCurSys;
+ 206   6                             }
+ 207   5                             }
+ 208   4                         }
+ 209   3                      }
+ 210   2                      else
+ 211   2                      {
+ 212   3                         g_ucStableTime = 0X00;
+ 213   3                      }
+ 214   2              }
+ 215   1      
+ 216   1              //#ifdef NoSignalBLOffEn
+ 217   1              #if 0
+                      if((!IsHlockOk()) || (!IsVlockOk()))
+                      {       
+                          if(g_bBackLightFlg)
+                          {
+                              IrqPutstr("bl off\n");
+                              #ifdef BacklightEn
+                                      hw_clrBacklight(); 
+                                      g_bBackLightFlg = OFF; 
+                                      hw_clrBIASEn();
+                              #endif
+              
+                                      CLK_GATE0_EN &=~(_BIT7|_BIT6|_BIT5);
+                                      CLK_GATE1_EN &=~(_BIT7|_BIT6|_BIT5|_BIT3|_BIT2|_BIT1|_BIT0);
+                                      CLK_GATE2_EN &=~(_BIT7|_BIT6|_BIT5|_BIT4|_BIT3|_BIT2|_BIT1|_BIT0);
+                                      ENH_PLL &=~(_BIT3|_BIT2);
+                                      VIDEO_SOG_EN &=~(_BIT1|_BIT0);
+C51 COMPILER V9.51   INTERRUPT                                                             09/08/2019 13:51:47 PAGE 5   
+
+                      }
+                      }
+                      #endif
+ 237   1      }
+ 238          
+ 239          
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

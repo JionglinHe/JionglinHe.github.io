@@ -1,0 +1,127 @@
+C51 COMPILER V9.51   IR                                                                    09/08/2019 13:51:48 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE IR
+OBJECT MODULE PLACED IN ..\Hex\Ir.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\GetUserInput\Ir\Ir.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\.
+                    -.\OSD;..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pan
+                    -nels;..\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\.
+                    -.\GetUserInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device
+                    - driver\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device dri
+                    -ver\Kt0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Ir.lst) OBJECT(..\Hex\Ir.obj)
+
+line level    source
+
+   1          /***********************************************************************
+   2          *Copyright (C) 2005 深圳艾科创新有限公司产品应用一部
+   3          * All rights reserved.
+   4          
+   5          *File name: 　 IR.c
+   6          *Version:    　0.1
+   7          *Author:       cjinzong
+   8          *update:       2011-12-10
+   9          
+  10          *Description:
+  11          *History:
+  12          ************************************************************************/
+  13          #define _IR_C_
+  14          
+  15          #include "DataType.h"
+  16          #include "systemConfig.h"
+  17          #include "MsgMap.h"
+  18          #include "Debug.h"
+  19          #include "Ir.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+  20          #include "AMT_REG.h"
+  21          #include "AMT_MCU.h"
+  22          
+  23          
+  24          
+  25          
+  26          #ifdef IrDetectEn
+              #include "IrMap.h"
+              
+              
+              /*********************Ir Msg Map******************/
+              
+              IrMsgMap CODE SysIrMsgMap[] =
+              {
+                 IrKeyMsgMap
+              };
+              
+              
+              
+              /***********************************************************
+              *name:           GetRemoteKeyValue(UINT IrVal)
+              *input:      IrValue
+              *output:     返回当前Ir的值。
+              *state:      allright
+              *Update:     2011-12-30
+              
+              *description:   
+                          查询当前Ir的值。
+              *history:   yshuizhou   2011/12/30    0.2    build  this  function      
+C51 COMPILER V9.51   IR                                                                    09/08/2019 13:51:48 PAGE 2   
+
+              ************************************************************/
+              UINT POS_GetRemoteKeyVal(UINT IrVal)
+              {    
+                   UINT XDATA CurrentIr = IR_NULL_KEY;
+              
+                   if(CheckReleaseFlg())
+                   {
+                                ClrReleaseFlg();
+                   }
+                      
+                       if((IrVal != IR_NULL_KEY)&&(!g_bLogoFlg))
+                   {    
+                        g_ucRemoteKeyVal = IR_NULL_KEY;
+                                
+                        if(CheckRepeatFlg())
+                            {
+                                 //printfStr("repeat");
+                                 g_UserInputInfo.Status = inputHold;
+                            }  
+                                else
+                                {
+                                     //printfStr("no repeat");
+                                     g_UserInputInfo.Status = inputPress;
+                                }
+                        CurrentIr = IrVal;
+                                //printf("boot current key val =%x", CurrentIr);
+                   }
+                       return CurrentIr;
+              }
+              
+              
+              
+              /***********************************************************
+              *name:           TransferIrKeyMsg(UINT IrKeyVal)
+              *input:      IrKeyVal
+              *output:     返回对应按键值的消息
+              *update:     2011-12-22
+              
+              *description:   
+                       这个函数是根据当前按键值在SysIrMap映射表中查找相应的按键消息。
+              *history:yshuizhou   2011/12/30    0.2    build  this  function 
+              ************************************************************/
+              MSG POS_TransferIrKeyMsg(UINT IrKeyVal)
+              {
+                   UCHAR XDATA i;
+                       MSG XDATA IrMsg =MSG_NULL;
+                       
+                      for(i = 0; i < sizeof(SysIrMsgMap)/sizeof(SysIrMsgMap[0]); i++)
+                  {
+                     if(SysIrMsgMap[i].IrVal == IrKeyVal)        
+                     {  
+                           IrMsg = SysIrMsgMap[i].IrMsg;
+                     } 
+                  }
+                  return IrMsg;       
+              }
+              #endif
+ 106          
+ 107          
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)

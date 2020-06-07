@@ -1,0 +1,1889 @@
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 1   
+
+
+C51 COMPILER V9.51, COMPILATION OF MODULE OSD_MENU
+OBJECT MODULE PLACED IN ..\Hex\Osd_Menu.obj
+COMPILER INVOKED BY: E:\keil5\Keil\C51\BIN\C51.EXE ..\..\..\OSD\Osd_Menu.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\..\..\OSD;
+                    -..\..\..\OSD\Logo;../../../Inc;../../../UserConfig;../../../ARKLib;../../../UserConfig/Prj config;..\..\..\LCD Pannels;.
+                    -.\..\..\LCD Pannels\LCD parameter;..\..\..\GetUserInput;..\..\..\GetUserInput\Ir;..\..\..\GetUserInput\Key;..\..\..\GetU
+                    -serInput\GPIO;..\..\..\Device driver\AMT;..\..\..\Device driver\ArkChip;..\..\..\Device driver\Mcu;..\..\..\Device drive
+                    -r\Flash;..\..\..\Device driver\I2C;..\..\..\Device driver\E2prom;..\..\..\Device driver\WT5700;..\..\..\Device driver\Kt
+                    -0803l;..\..\..\Device driver\BT;..\..\..\Debug) DEBUG OBJECTEXTEND PRINT(..\List\Osd_Menu.lst) OBJECT(..\Hex\Osd_Menu.ob
+                    -j)
+
+line level    source
+
+   1          #define _OSD_MENU_C
+   2          
+   3          #include "DataType.h"
+   4          #include "SystemConfig.h"
+   5          #include "Global.h"
+*** WARNING C245 IN LINE 12 OF E:\keil5\Keil\C51\Inc\intrins.h: unknown #pragma, line ignored
+*** ERROR C263 IN LINE 36 OF E:\keil5\Keil\C51\Inc\intrins.h: save/restore: stack overflow/underflow
+   6          #include "MsgMap.h"
+   7          #include "sysWorkPara.h"
+   8          #include "sysPower.h" 
+   9          #include "videoProc.h"
+  10          #include "configLCDPara.h"
+  11          #include "Debug.h"
+  12          #include "Delay.h"
+  13          #include "mcu.h"
+  14          #include "interrupt.h"
+  15          #include "AMT_REG.H"
+  16          #include "AMT_Drv.h"
+  17          #include "AMT_MCU.h"
+  18          #include "BT_UartRec.h"
+  19          #include "Osd_Menu.h"
+  20          #include "Osd_MenuPage.h"
+  21          #include "Osd_MenuTbl.h"
+  22          #include "IrMap.h"
+  23          #include "Ir.h"
+  24          
+  25          
+  26          #if OSD_STYLE_TYPE != OSD_STYLE_ARK
+                "当前OSD风格不匹配，请设置为ARK OSD风格。"
+              #endif//OSD_STYLE_TYPE == OSD_STYLE_ARK
+  29          
+  30          
+  31          UCHAR KeyMsgProcess(MSG curMsg)
+  32          {
+  33   1           UCHAR ucComd = COMD_Nothing;
+  34   1               
+  35   1           switch(curMsg)
+  36   1           {
+  37   2                 case MSG_UPK_UP:
+  38   2                          printfStr("MSG_UPK_UP");
+  39   2                          SetSaveFlagEn();
+  40   2                          
+  41   2                          #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 2   
+
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+  53   2                      break;
+  54   2                              
+  55   2                 case MSG_UPK_DOWN:
+  56   2                          printfStr("MSG_UPK_DOWN");
+  57   2                          SetSaveFlagEn();
+  58   2      
+  59   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+  71   2                      break;
+  72   2                              
+  73   2                 case MSG_UPK_LEFT:
+  74   2                          printfStr("MSG_UPK_LEFT");
+  75   2                          SetSaveFlagEn();
+  76   2      
+  77   2                          #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+  89   2                      break;
+  90   2                              
+  91   2                 case MSG_UPK_RIGHT:
+  92   2                          printfStr("MSG_UPK_RIGHT");
+  93   2                          SetSaveFlagEn();
+  94   2      
+  95   2                          #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 107   2                      break;
+ 108   2                              
+ 109   2                 case MSG_UPK_MENU:
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 3   
+
+ 110   2                          printfStr("MSG_UPK_MENU");
+ 111   2      
+ 112   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 124   2                              
+ 125   2                      break;
+ 126   2                              
+ 127   2                 case MSG_UPK_VOLUME_INC:
+ 128   2                          printfStr("MSG_UPK_VOLUME_INC");
+ 129   2                          SetSaveFlagEn();
+ 130   2      
+ 131   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 143   2                      break;
+ 144   2                              
+ 145   2                 case MSG_UPK_VOLUME_DEC:
+ 146   2                          printfStr("MSG_UPK_VOLUME_DEC");
+ 147   2                          SetSaveFlagEn();
+ 148   2      
+ 149   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 161   2                      break;
+ 162   2                              
+ 163   2                 case MSG_UPK_BRIGHTNESS:
+ 164   2                  printfStr("MSG_UPK_BRIGHTNESS");
+ 165   2                          SetSaveFlagEn();
+ 166   2                              
+ 167   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 4   
+
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif                      
+ 179   2                      break;
+ 180   2      
+ 181   2                 case MSG_UPK_CONTRAST:
+ 182   2                  printfStr("MSG_UPK_CONTRAST");
+ 183   2                          SetSaveFlagEn();
+ 184   2                              
+ 185   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif                      
+ 197   2                      break;
+ 198   2      
+ 199   2                 case MSG_UPK_SATURATION:
+ 200   2                  printfStr("MSG_UPK_SATURATION");
+ 201   2                          SetSaveFlagEn();
+ 202   2                              
+ 203   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif                      
+ 215   2                      break;
+ 216   2                              
+ 217   2                 case MSG_UPK_MUTEONOFF:
+ 218   2                          printfStr("MSG_UPK_MUTEONOFF");
+ 219   2                          SetSaveFlagEn();
+ 220   2      
+ 221   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 233   2                      break;
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 5   
+
+ 234   2                              
+ 235   2                 case MSG_UPK_MODE:
+ 236   2                  printfStr("MSG_UPK_MODE");
+ 237   2                          SetSaveFlagEn(); 
+ 238   2                              
+ 239   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif              
+ 251   2                      break;
+ 252   2      
+ 253   2                 case MSG_UPK_SYS:
+ 254   2                  printfStr("MSG_UPK_SYS");
+ 255   2                          SetSaveFlagEn();
+ 256   2      
+ 257   2                              if(OFF == g_sysSetting.Factory.flipswitch)
+ 258   2                              {
+ 259   3                                 return COMD_Nothing;
+ 260   3                              }
+ 261   2                              
+ 262   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif              
+ 274   2                      break;
+ 275   2                              
+ 276   2                 case MSG_UPK_SOURCE_SWITCH:
+ 277   2                          printfStr("MSG_UPK_SOURCE_SWITCH");
+ 278   2                          SetSaveFlagEn();
+ 279   2      
+ 280   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {
+                                              if(IsPowerOn())  
+                                              {                                 
+                                                 if(inputPress == g_UserInputInfo.Status)
+                                                 { 
+                                                       SetBuzzerOn();
+                                                 }
+                                          }
+                                      }
+                                  #endif
+ 292   2      
+ 293   2                          if((g_sysSetting.Car.status == CAR_PON_REVERSING) || (g_sysSetting.Car.status == CAR_POF_REVERSIN
+             -G))
+ 294   2                          {
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 6   
+
+ 295   3                              return COMD_Nothing;
+ 296   3                          }
+ 297   2                      break;
+ 298   2                              
+ 299   2                 case MSG_UPK_POWER:
+ 300   2                          printfStr("MSG_UPK_POWER");
+ 301   2                          SetSaveFlagEn();
+ 302   2      
+ 303   2                              #ifdef BuzzerEn
+                                      if(g_UserInputInfo.Type & KeyType)
+                                      {  
+                                         if(inputPress == g_UserInputInfo.Status)
+                                         { 
+                                                       SetBuzzerOn();
+                                         }
+                                      }
+                          #endif
+ 312   2      
+ 313   2                          if((g_sysSetting.Car.status == CAR_PON_REVERSING) || (g_sysSetting.Car.status == CAR_POF_REVERSIN
+             -G))
+ 314   2                          {
+ 315   3                              return COMD_Nothing;
+ 316   3                          }
+ 317   2                      break;
+ 318   2                              
+ 319   2                      default:
+ 320   2                              break;
+ 321   2           }
+ 322   1               
+ 323   1           //按键OSD处理:
+ 324   1               ucComd = FindComdInCurMenuItem(curMsg);         
+ 325   1               return ucComd;
+ 326   1      }
+ 327          
+ 328          /***********************************************************
+ 329          *name:           FindComdInCurMenuItem(MSG curMsg)
+ 330          *input:      curMsg
+ 331          *output:     comd 
+ 332          *update:     2012-01-13
+ 333          *state:      allright
+ 334          
+ 335          *description:   
+ 336                     从当前的Item 找到相应的输入命令，并返回此命令值.(MSG -> COMD) 
+ 337          
+ 338          *history:
+ 339          ************************************************************/
+ 340          UCHAR FindComdInCurMenuItem(MSG curMsg)
+ 341          { 
+ 342   1          UCHAR XDATA ucComd = COMD_Nothing;  
+ 343   1          UCHAR XDATA ucIndex;
+ 344   1              
+ 345   1      #define CheckInputSource ((CurrentMenuItem.KeyComdMap[ucIndex].Source == g_sysSetting.Video.curSource)||(C
+             -urrentMenuItem.KeyComdMap[ucIndex].Source == ALL_INPUT_SOURCE))
+ 346   1      
+ 347   1      FindComdAgain:
+ 348   1      
+ 349   1              for(ucIndex=0;ucIndex<CurrentMenuItem.ComdCount; ucIndex++)
+ 350   1              {
+ 351   2                  if((CurrentMenuItem.KeyComdMap[ucIndex].Msg == curMsg)&&CheckInputSource)
+ 352   2                  {   
+ 353   3                              if(CurrentMenuItem.KeyComdMap[ucIndex].cConditions & g_UserInputInfo.Status)
+ 354   3                              {
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 7   
+
+ 355   4                                      ucComd = CurrentMenuItem.KeyComdMap[ucIndex].Comd;  
+ 356   4                                      return ucComd;
+ 357   4                              }
+ 358   3                              else
+ 359   3                              {   
+ 360   4                      if(FindMenuPageIndex(Osd_RootMenu) == g_ucMenuPageIndex)
+ 361   4                      {
+ 362   5                         continue; 
+ 363   5                      }
+ 364   4                                      else
+ 365   4                                      {
+ 366   5                                         return COMD_Nothing;
+ 367   5                                      }
+ 368   4                              }
+ 369   3                  }
+ 370   2              }
+ 371   1          /*表示此按键信息在当前菜单中无效，切换到根菜单*/
+ 372   1              if(FindMenuPageIndex(Osd_RootMenu) != g_ucMenuPageIndex)
+ 373   1              {   
+ 374   2                      g_ucMenuPageIndex = FindMenuPageIndex(Osd_RootMenu);
+ 375   2                      g_ucMenuItemIndex = 0; 
+ 376   2                      goto FindComdAgain;
+ 377   2              }
+ 378   1              return COMD_Nothing;    
+ 379   1      }
+ 380          
+ 381          
+ 382          BOOL ExectComd(ComdType OpratComd)
+ 383          {
+ 384   1          BOOL OpratComdFlg = TRUE;
+ 385   1              
+ 386   1          while(OpratComdFlg)
+ 387   1          {
+ 388   2              OpratComdFlg = FALSE;
+ 389   2                      
+ 390   2              switch (OpratComd)
+ 391   2              {
+ 392   3                              case COMD_IncValue:
+ 393   3                              case COMD_DecValue:
+ 394   3                              if(CurrentMenuItem.AdjustFunction)
+ 395   3                              {
+ 396   4                                   if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 397   4                                   {
+ 398   5                                        DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 399   5                                   }
+ 400   4                              }
+ 401   3                                      if(CurrentMenuItem.ExecFunction)
+ 402   3                                      {
+ 403   4                                              CurrentMenuItem.ExecFunction();
+ 404   4                                      }
+ 405   3                                      break;
+ 406   3      
+ 407   3                              case COMD_NextItem:
+ 408   3                              case COMD_PrevItem:
+ 409   3                                       DrawOsdMenuItem(&CurrentMenuItem, osdDraw);
+ 410   3                                       if(OpratComd == COMD_NextItem)
+ 411   3                                       {
+ 412   4                                            g_ucMenuItemIndex = GetNextItem();  
+ 413   4                                                //printf("netx g_ucMenuItemIndex = %x", g_ucMenuItemIndex);
+ 414   4                                       }
+ 415   3                                       else
+ 416   3                                       {
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 8   
+
+ 417   4                                                g_ucMenuItemIndex = GetPrevItem();
+ 418   4                                                //printf("prev g_ucMenuItemIndex = %x", g_ucMenuItemIndex);
+ 419   4                                       }
+ 420   3                       if(FindMenuPageIndex(Osd_FactoryMenu) ==g_ucMenuPageIndex)  
+ 421   3                                       { 
+ 422   4                                           g_ucFactoryMenuItemIndex = g_ucMenuItemIndex;
+ 423   4                                       }
+ 424   3                                      DrawOsdMenuItem(&CurrentMenuItem, osdSel);      
+ 425   3                                      break;
+ 426   3      
+ 427   3                              case COMD_EnterFactoryItem:
+ 428   3                                      if(FindMenuPageIndex(Osd_FactoryMenu) ==g_ucMenuPageIndex)  
+ 429   3                                      {  
+ 430   4                                         switch(g_ucMenuItemIndex)
+ 431   4                                         {
+ 432   5                                           case FactoryPic:
+ 433   5                                                         SetMenuIndex(Osd_FactoryPicMenu);
+ 434   5                                                         break;
+ 435   5                                                         
+ 436   5                                               case FactorySwitch:
+ 437   5                                                         SetMenuIndex(Osd_FactorySwitchMenu);
+ 438   5                                                         break;
+ 439   5                                                         
+ 440   5                                               default:
+ 441   5                                                         SetMenuIndex(Osd_FactoryPicMenu);
+ 442   5                                                         break;
+ 443   5                                         }
+ 444   4                                      }
+ 445   3                                      DrawOsdMenuItem(&CurrentMenuItem, osdDraw);
+ 446   3                                      DrawOsdMenuItem(&CurrentMenuItem, osdSel);      
+ 447   3                                      break;
+ 448   3                                      
+ 449   3                              case COMD_NextMenu:
+ 450   3                              case COMD_PrevMenu:
+ 451   3                                      if(OpratComd == COMD_NextMenu)
+ 452   3                                      {
+ 453   4                                            g_ucMenuPageIndex = GetNextMenu();
+ 454   4                                                //printf("netx g_ucMenuPageIndex = %x", g_ucMenuPageIndex);
+ 455   4                                      }
+ 456   3                                      else
+ 457   3                                      {
+ 458   4                                                g_ucMenuPageIndex = GetPreMenu();
+ 459   4                                                //printf("prev g_ucMenuPageIndex = %x", g_ucMenuPageIndex);
+ 460   4                                      }
+ 461   3                              case COMD_RedrawMenu:
+ 462   3                                      if(FindMenuPageIndex(Osd_RootMenu) == g_ucMenuPageIndex)
+ 463   3                                      {   
+ 464   4                                              SetMenuIndex(Osd_BrightnessMenu);
+ 465   4                                      }
+ 466   3                                      //printf("g_ucMenuPageIndex = %x", g_ucMenuPageIndex);
+ 467   3                                      OsdBlockEnable(CurrentBlock);
+ 468   3                                      OsdConfigScaler(OsdScalerRatio);
+ 469   3                                      DrawOsdMenu();          
+ 470   3                                      g_ucOsdEixt |= (OsdMode|OsdSys);
+ 471   3                                      break;
+ 472   3      
+ 473   3                        case COMD_RedrawFactoryMenu:
+ 474   3                                  printfStr("COMD_RedrawFactoryMenu");
+ 475   3                                      OsdBlockEnable(CurrentBlock);
+ 476   3                                      OsdConfigScaler(OsdScalerRatio);  
+ 477   3                                      DrawOsdMenu();  
+ 478   3                                      DrawOsdMenuItem(&CurrentMenuItem, osdDraw);     
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 9   
+
+ 479   3                                      SetMenuIndex(Osd_FactoryMenu);
+ 480   3                                      g_ucMenuItemIndex = g_ucFactoryMenuItemIndex;
+ 481   3                                      break;
+ 482   3      
+ 483   3                              case COMD_SelPowerOnMode:
+ 484   3                                      if(IsAllPowerOn())
+ 485   3                                      {
+ 486   4                                          SetAllPowerOn();
+ 487   4                                      }
+ 488   3                                      else if(IsAllPowerOff())
+ 489   3                                      {
+ 490   4                                          SetAllPowerOff(); 
+ 491   4                                      }
+ 492   3                                      else if(IsPowerSave())
+ 493   3                                      {
+ 494   4                                          SetPowerSave();
+ 495   4                                      }
+ 496   3      
+ 497   3                              case COMD_Power:
+ 498   3                                      if(IsPowerOn())
+ 499   3                                      {
+ 500   4                                          printfStr("Osd_PowerOffMenu");
+ 501   4                                          SetMenuIndex(Osd_PowerOffMenu);
+ 502   4                                      }
+ 503   3                                      else
+ 504   3                                      {
+ 505   4                                          printfStr("Osd_PowerOnMenu");
+ 506   4                                          SetMenuIndex(Osd_PowerOnMenu);
+ 507   4                                      }
+ 508   3      
+ 509   3                                      if(CurrentMenuItem.ExecFunction)
+ 510   3                                      {   
+ 511   4                                          printfStr("ExecFunction");
+ 512   4                                          CurrentMenuItem.ExecFunction();
+ 513   4                                      }       
+ 514   3      
+ 515   3                                      #ifdef LogoEn 
+                                              #if ((LOGO_DISP_MODE == NOSIGNAL_DISP_LOGO)||(POWER_ON_NOSIGNAL_DISP_LOGO ==LOGO_DISP_MODE))
+                                              g_bLogoFlg = TRUE;
+                                              if(IsPowerOn()&&IsSignalOk())
+                                              {
+                                                  if(g_sysSetting.Car.DetecMode != AV_SIGNAL_OK) //上电的时候有倒车信号不显示LOGO
+                                                      {
+                                                              printfStr("Osd_LogoMenu");
+                                                              SetVDETestSwitch(LOGO_DISP_BACKCOLOR);
+                                                              switch(g_sysSetting.Logo.logoID)
+                                                              {
+                                                                case LOGO1:
+                                                                         printfStr("Osd_Logo1Menu");
+                                                                         SetMenuIndex(Osd_LOGO1Menu);
+                                                                         break;
+                                                                         
+                                                                case LOGO2:
+                                                                         printfStr("Osd_Logo2Menu");
+                                                                         SetMenuIndex(Osd_LOGO2Menu);
+                                                                         break;
+                                                                         
+                                                                case LOGO3:
+                                                                         printfStr("Osd_Logo3Menu");
+                                                                         SetMenuIndex(Osd_LOGO3Menu);
+                                                                         break;
+              
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 10  
+
+                                                                case LOGO4:
+                                                                         printfStr("Osd_Logo4Menu");
+                                                                         SetMenuIndex(Osd_LOGO4Menu);
+                                                                         break;
+                                                                         
+                                                               case LOGO5:
+                                                                         printfStr("Osd_Logo5Menu");
+                                                                         SetMenuIndex(Osd_LOGO5Menu);
+                                                                         break;       
+                                                                         
+                                                               default:
+                                                                        printfStr("default Osd_Logo1Menu");
+                                                                        SetMenuIndex(Osd_LOGO1Menu);
+                                                                        break;
+                                                              }
+                                                              OsdIconSize(16,22);
+                                                              InitLogoMenuDat();
+                                                              OsdBlockEnable(CurrentBlock);
+                                                              OsdConfigScaler(OsdScalerRatio);
+                                                              DrawOsdMenu();
+                                                              TurnOnBackLight();
+                                                              POS_ClearWatchDog();
+                                                              DelayMs(4000);
+                                                              HideMenu();
+                                                              SetVDETestSwitch(VDE_CLOSE);
+                                                              ResetMenuIndex();
+                                                              InitOSD();      
+                                                              SetMenuIndex(Osd_PowerOnMenu);
+                                                 }
+                                              }
+                                              g_bLogoFlg = FALSE;
+                                              g_ucRemoteKeyVal = IR_NULL_KEY;
+                                              #endif
+                                              #endif
+ 575   3                                      break;
+ 576   3      
+ 577   3                              case COMD_RedrawLogo:
+ 578   3                                      HideMenu();
+ 579   3                                      DelayMs(10);
+ 580   3                                       SetVDETestSwitch(LOGO_DISP_BACKCOLOR);
+ 581   3                                       switch(g_sysSetting.Logo.logoID)
+ 582   3                                       {
+ 583   4                                                case LOGO1:
+ 584   4                                                         printfStr("Osd_Logo1Menu");
+ 585   4                                                         SetMenuIndex(Osd_LOGO1Menu);
+ 586   4                                                         break;
+ 587   4                                                         
+ 588   4                                                case LOGO2:
+ 589   4                                                         printfStr("Osd_Logo2Menu");
+ 590   4                                                         SetMenuIndex(Osd_LOGO2Menu);
+ 591   4                                                         break;
+ 592   4                                                         
+ 593   4                                                case LOGO3:
+ 594   4                                                         printfStr("Osd_Logo3Menu");
+ 595   4                                                         SetMenuIndex(Osd_LOGO3Menu);
+ 596   4                                                         break;
+ 597   4      
+ 598   4                                                case LOGO4:
+ 599   4                                                         printfStr("Osd_Logo4Menu");
+ 600   4                                                         SetMenuIndex(Osd_LOGO4Menu);
+ 601   4                                                         break;
+ 602   4                                                         
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 11  
+
+ 603   4                                               case LOGO5:
+ 604   4                                                         printfStr("Osd_Logo5Menu");
+ 605   4                                                         SetMenuIndex(Osd_LOGO5Menu);
+ 606   4                                                         break;       
+ 607   4                                                         
+ 608   4                                               default:
+ 609   4                                                        printfStr("default Osd_Logo1Menu");
+ 610   4                                                        SetMenuIndex(Osd_LOGO1Menu);
+ 611   4                                                        break;
+ 612   4                                       }
+ 613   3                                      OsdIconSize(16,22);
+ 614   3                                      #ifdef LogoEn
+                                              InitLogoMenuDat();
+                                              #endif
+ 617   3                                      
+ 618   3                                      OsdBlockEnable(CurrentBlock);
+ 619   3                                      OsdConfigScaler(1);
+ 620   3                                      DrawOsdMenu();
+ 621   3                                      TurnOnBackLight();
+ 622   3                                      break;
+ 623   3      
+ 624   3                              case COMD_ClearLogo:
+ 625   3                                       //printfStr("COMD_ClearLogo");
+ 626   3                                       HideMenu();
+ 627   3                                       SetVDETestSwitch(VDE_CLOSE);
+ 628   3                                       ResetMenuIndex();
+ 629   3                                       InitOSD();     
+ 630   3                                       break;
+ 631   3      
+ 632   3                              case COMD_RedrawSnow:
+ 633   3                                       printfStr("COMD_RedrawSnow");
+ 634   3                                       #ifdef NoSignalSnowEn
+                                               SetNoSignalSnow();
+                                               #endif
+ 637   3                                       break;
+ 638   3                                       
+ 639   3                              case COMD_ClearNoSignal:
+ 640   3                                       printfStr("COMD_ClearNoSignal");
+ 641   3                                       if(!IsFactoryEn())
+ 642   3                                       {
+ 643   4                                          SetMenuIndex(Osd_NoSignalMenu);
+ 644   4                                          OsdBlockHide(CurrentBlock);
+ 645   4                                       }
+ 646   3                                       break;
+ 647   3      
+ 648   3                          case COMD_TurnOnBacklight:
+ 649   3                                       printfStr("COMD_TurnOnBacklight");                              
+ 650   3                                       if(!g_bBackLightFlg)
+ 651   3                                       {
+ 652   4                                           TurnOnBackLight();
+ 653   4      
+ 654   4                           #ifdef AudioCtrlEn
+                                                       if((IsSignalOk()))
+                                                       {
+                                                           OpenAudio();   
+                                                       }
+                                   #endif
+ 660   4                                       }
+ 661   3                                       break;
+ 662   3                                       
+ 663   3                 case COMD_TurnOffBacklight:
+ 664   3                                       printfStr("COMD_TurnOffBacklight");
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 12  
+
+ 665   3                                       if(g_bBackLightFlg)
+ 666   3                                       {
+ 667   4                                            
+ 668   4                                              TurnOffBackLight(); 
+ 669   4                                              SaveSetting();
+ 670   4                                       }                               
+ 671   3                                      break;
+ 672   3      
+ 673   3                              case COMD_SelReset:
+ 674   3                              case COMD_SelSource:
+ 675   3                                      if(COMD_SelReset == OpratComd)
+ 676   3                                      {
+ 677   4                                        SetMenuIndex(Osd_ResetMenu);
+ 678   4                                      }
+ 679   3                                      else
+ 680   3                                      {
+ 681   4                                        SetMenuIndex(Osd_QuicklySource);
+ 682   4                                      }
+ 683   3                                      if(CurrentMenuItem.AdjustFunction)
+ 684   3                                      {
+ 685   4                                          CurrentMenuItem.AdjustFunction(OpratComd);
+ 686   4                                      }
+ 687   3                                      if(CurrentMenuItem.ExecFunction)
+ 688   3                                      {
+ 689   4                                          CurrentMenuItem.ExecFunction();
+ 690   4                                      }
+ 691   3                              case COMD_ShowSource:
+ 692   3                                      printfStr("COMD_ShowSource");
+ 693   3                                      if(!IsFactoryEn())
+ 694   3                                      {
+ 695   4                                              SetMenuIndex(Osd_QuicklySource);
+ 696   4                                              OsdBlockEnable(CurrentBlock);
+ 697   4                                              OsdConfigScaler(OsdScalerRatio);
+ 698   4                                              DrawOsdMenu();
+ 699   4                                              SetMenuIndex(Osd_RootMenu);
+ 700   4                                      }
+ 701   3                                      break;
+ 702   3                                      
+ 703   3                              case COMD_IncVolume:
+ 704   3                              case COMD_DecVolume:
+ 705   3                                      printfStr("Osd_QuicklyVolume");
+ 706   3                                      if(OFF == g_sysSetting.Factory.volumeswitch)
+ 707   3                                      {
+ 708   4                                           return FALSE;
+ 709   4                                      }
+ 710   3                                      SetMenuIndex(Osd_QuicklyVolume);
+ 711   3                                      if(g_ucOsdEixt & OsdVolume)
+ 712   3                                      {
+ 713   4                                         OsdBlockEnable(CurrentBlock);
+ 714   4                                         OsdConfigScaler(OsdScalerRatio);
+ 715   4                                         DrawOsdMenu();
+ 716   4                                         g_ucOsdEixt &= ~OsdVolume;
+ 717   4                                         g_ucOsdEixt |= (OsdMenu|OsdSource|OsdMode|OsdSys);
+ 718   4                                      }
+ 719   3                                      if(CurrentMenuItem.AdjustFunction)
+ 720   3                                      {
+ 721   4                                         if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 722   4                                         {
+ 723   5                                                DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 724   5                                         }
+ 725   4                                      }
+ 726   3                                      if(CurrentMenuItem.ExecFunction)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 13  
+
+ 727   3                                      {
+ 728   4                                                CurrentMenuItem.ExecFunction();
+ 729   4                                      }
+ 730   3                                      break;
+ 731   3                                        
+ 732   3                              case COMD_SelMode:
+ 733   3                                        printfStr("COMD_SelMode");
+ 734   3                                        if(OFF == g_sysSetting.Factory.scalerswitch)
+ 735   3                                        {
+ 736   4                                           return FALSE;
+ 737   4                                        }
+ 738   3                                        SetMenuIndex(Osd_QuicklyMode);
+ 739   3                        if(CurrentMenuItem.AdjustFunction)
+ 740   3                                        {
+ 741   4                                                 if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 742   4                                                 {
+ 743   5                                                        DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 744   5                                                 }
+ 745   4                                        }
+ 746   3                                        if(CurrentMenuItem.ExecFunction)
+ 747   3                                        {
+ 748   4                                             CurrentMenuItem.ExecFunction();
+ 749   4                                        }
+ 750   3                  case COMD_Mode:
+ 751   3                                       printfStr("Osd_QuicklyMode");
+ 752   3                                       if(g_ucOsdEixt & OsdMode)
+ 753   3                                       {
+ 754   4                                               OsdBlockEnable(CurrentBlock);
+ 755   4                                               OsdConfigScaler(OsdScalerRatio);
+ 756   4                                               DrawOsdMenu();
+ 757   4                                               g_ucOsdEixt &= ~OsdMode;
+ 758   4                                               g_ucOsdEixt |= (OsdMenu|OsdSource|OsdVolume|OsdSys);
+ 759   4                                       }
+ 760   3                                       SetMenuIndex(Osd_RootMenu);
+ 761   3                                       break;
+ 762   3                              
+ 763   3                              case COMD_SelMuteOnOff:
+ 764   3                                      printfStr("COMD_SelMuteOnOff");
+ 765   3                                      SetMenuIndex(Osd_QuicklyMute);
+ 766   3                                      if(CurrentMenuItem.AdjustFunction)
+ 767   3                                      {
+ 768   4                                          CurrentMenuItem.AdjustFunction(OpratComd);
+ 769   4                                      }
+ 770   3                                      if(CurrentMenuItem.ExecFunction)
+ 771   3                                      {
+ 772   4                                          CurrentMenuItem.ExecFunction();
+ 773   4                                      }
+ 774   3                              case COMD_ShowMuteOnOff:
+ 775   3                                      printfStr("COMD_ShowMuteOnOff");
+ 776   3                                      SetMenuIndex(Osd_QuicklyMute);
+ 777   3                                      OsdBlockEnable(CurrentBlock);
+ 778   3                                      OsdConfigScaler(OsdScalerRatio);
+ 779   3                                      DrawOsdMenu();
+ 780   3                                      SetMenuIndex(Osd_RootMenu);
+ 781   3                                      break;
+ 782   3      
+ 783   3                              case COMD_SelSys:
+ 784   3                                       printfStr("COMD_SelSys");
+ 785   3                                       if(OFF == g_sysSetting.Factory.flipswitch)
+ 786   3                                       {
+ 787   4                                           return FALSE;
+ 788   4                                       }
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 14  
+
+ 789   3                                       SetMenuIndex(Osd_QuicklySys);
+ 790   3                       if(CurrentMenuItem.AdjustFunction)
+ 791   3                                       {
+ 792   4                                          if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 793   4                                              {
+ 794   5                                                  DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 795   5                                              }
+ 796   4                                       }
+ 797   3                                       if(CurrentMenuItem.ExecFunction)
+ 798   3                                       {
+ 799   4                                          CurrentMenuItem.ExecFunction();
+ 800   4                                       }
+ 801   3                  case COMD_Sys:
+ 802   3                                       printfStr("Osd_QuicklySys");
+ 803   3                                       if(g_ucOsdEixt & OsdSys)
+ 804   3                                       {
+ 805   4                                          OsdBlockEnable(CurrentBlock);
+ 806   4                                          OsdConfigScaler(OsdScalerRatio);
+ 807   4                                          DrawOsdMenu();
+ 808   4                                              g_ucOsdEixt &= ~OsdSys;
+ 809   4                                              g_ucOsdEixt |= (OsdMenu|OsdSource|OsdVolume|OsdMode);
+ 810   4                                       }
+ 811   3                                       break;
+ 812   3                                       
+ 813   3                          case COMD_Brightness:
+ 814   3                                      printfStr("COMD_Brightness");
+ 815   3                                      SetMenuIndex(Osd_QuicklyBrightness);
+ 816   3                                      if(g_ucOsdEixt & OsdBrightness)
+ 817   3                                      {
+ 818   4                                              OsdBlockEnable(CurrentBlock);
+ 819   4                                              OsdConfigScaler(OsdScalerRatio);
+ 820   4                                              DrawOsdMenu();
+ 821   4                                              g_ucOsdEixt &= ~OsdBrightness;
+ 822   4                                              g_ucOsdEixt |= OsdContrast;
+ 823   4                                              g_ucOsdEixt |= OsdSaturation;
+ 824   4                                      }
+ 825   3                                      if(CurrentMenuItem.AdjustFunction)
+ 826   3                                      {
+ 827   4                                         if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 828   4                                         {
+ 829   5                                                DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 830   5                                         }
+ 831   4                                      }
+ 832   3                                      if(CurrentMenuItem.ExecFunction)
+ 833   3                                      {
+ 834   4                                                CurrentMenuItem.ExecFunction();
+ 835   4                                      }
+ 836   3                                      break;
+ 837   3      
+ 838   3                              case COMD_Contrast:
+ 839   3                                      printfStr("COMD_Contrast");
+ 840   3                                      SetMenuIndex(Osd_QuicklyContrast);
+ 841   3                                      if(g_ucOsdEixt & OsdContrast)
+ 842   3                                      {
+ 843   4                                              OsdBlockEnable(CurrentBlock);
+ 844   4                                              OsdConfigScaler(OsdScalerRatio);
+ 845   4                                              DrawOsdMenu();
+ 846   4                                              g_ucOsdEixt |= OsdBrightness;
+ 847   4                                              g_ucOsdEixt &= ~OsdContrast;
+ 848   4                                              g_ucOsdEixt |= OsdSaturation;
+ 849   4                                      }
+ 850   3                                      if(CurrentMenuItem.AdjustFunction)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 15  
+
+ 851   3                                      {
+ 852   4                                         if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 853   4                                         {
+ 854   5                                                  DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel); 
+ 855   5                                         }
+ 856   4                                      }
+ 857   3                                      if(CurrentMenuItem.ExecFunction)
+ 858   3                                      {
+ 859   4                                                 CurrentMenuItem.ExecFunction();
+ 860   4                                      }                               
+ 861   3                                      break;
+ 862   3      
+ 863   3                              case COMD_Saturation:
+ 864   3                                      printfStr("COMD_Saturation");
+ 865   3                                      SetMenuIndex(Osd_QuicklySaturation);
+ 866   3                                      if(g_ucOsdEixt & OsdSaturation)
+ 867   3                                      {
+ 868   4                                              OsdBlockEnable(CurrentBlock);
+ 869   4                                              OsdConfigScaler(OsdScalerRatio);
+ 870   4                                              DrawOsdMenu();
+ 871   4                                              g_ucOsdEixt |= OsdBrightness;
+ 872   4                                              g_ucOsdEixt |= OsdContrast;
+ 873   4                                              g_ucOsdEixt &= ~OsdSaturation;
+ 874   4                                      }
+ 875   3                                      if(CurrentMenuItem.AdjustFunction)
+ 876   3                                      {
+ 877   4                                         if(CurrentMenuItem.AdjustFunction(OpratComd))
+ 878   4                                         {
+ 879   5                                                 DrawOsdMenuItemValue(CurrentMenuItem.ItemValue,osdSel);
+ 880   5                                         }
+ 881   4                                      }
+ 882   3                                      if(CurrentMenuItem.ExecFunction)
+ 883   3                                      {
+ 884   4                                            CurrentMenuItem.ExecFunction();
+ 885   4                                      }                               
+ 886   3                                      break;
+ 887   3                                      
+ 888   3                              case COMD_FactoryMenu:
+ 889   3                                       printfStr("COMD_FactoryMenu");
+ 890   3                                       SetFactoryEn();
+ 891   3                       SetPowerOn();
+ 892   3                                       SelVideoInputSource(g_sysSetting.Video.curSource);
+ 893   3                                       ExitLowPowerMode();
+ 894   3                                       TurnOnBackLight(); 
+ 895   3                                       SetMenuIndex(Osd_FactoryMenu);
+ 896   3                                       OsdBlockEnable(CurrentBlock);
+ 897   3                                       OsdConfigScaler(OsdScalerRatio);
+ 898   3                                       DrawOsdMenu();
+ 899   3                                       DrawOsdMenuItem(&CurrentMenuItem, osdSel);     
+ 900   3                                       break;
+ 901   3      
+ 902   3                              case COMD_OsdExit:
+ 903   3                                      printfStr("COMD_OsdExit");
+ 904   3                                      HideMenu();
+ 905   3                                        
+ 906   3                                      #ifdef NoSignalEn
+                                              if(!IsSignalOk())  
+                                              {
+                                                SetMenuIndex(Osd_NoSignalMenu);
+                                                OsdBlockEnable(CurrentBlock);
+                                                OsdConfigScaler(NoSignalScalerRatio);                           
+                                                DrawOsdMenu();
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 16  
+
+                                              }
+                                              #endif
+ 915   3                                      
+ 916   3                                      ResetMenuIndex();
+ 917   3                                      SaveSetting();                                  
+ 918   3                                      return FALSE;
+ 919   3                                      break;
+ 920   3      
+ 921   3                        case COMD_OsdStorage:
+ 922   3                                      printfStr("COMD_OsdStorage");
+ 923   3                              SaveSetting();
+ 924   3                                      return FALSE;
+ 925   3                                      break;
+ 926   3                                      
+ 927   3                              case COMD_ExitFactoryMenu:
+ 928   3                                       printfStr("COMD_ExitFactoryMenu");
+ 929   3                                       ClrFactoryEn() ;
+ 930   3                                       SetPowerOff();
+ 931   3                                      
+ 932   3                                       TurnOffBackLight(); 
+ 933   3                                       HideMenu();
+ 934   3                                       ResetMenuIndex();
+ 935   3                                       SaveSetting();
+ 936   3                           TurnOffDevicePower(g_sysSetting.Video.curSource);   
+ 937   3                                       EnterLowPowerMode();
+ 938   3                                       return FALSE;
+ 939   3                                       break;
+ 940   3      
+ 941   3                          case COMD_BatteryAdc:
+ 942   3                                       //printfStr("COMD_BatteryAdc");
+ 943   3                                       SetMenuIndex(Osd_BatteryAdcMenu);
+ 944   3                                       if(CurrentMenuItem.AdjustFunction)
+ 945   3                                       {
+ 946   4                                          CurrentMenuItem.AdjustFunction(OpratComd);
+ 947   4                                       }
+ 948   3                                       if(CurrentMenuItem.ExecFunction)
+ 949   3                                       {
+ 950   4                                          CurrentMenuItem.ExecFunction();
+ 951   4                                       }
+ 952   3                                       OsdBlockEnable(CurrentBlock);
+ 953   3                                       OsdConfigScaler(OsdScalerRatio);
+ 954   3                                       DrawSpecialOsdMenu();                           
+ 955   3                                       break;
+ 956   3      
+ 957   3                              #ifdef BTEn
+                                      case COMD_BTConn:
+                                      case COMD_BTDisc:
+                                              if(!IsCameraCar())
+                                              {
+                                                      SetMenuIndex(Osd_BTMenu);
+                                                      OsdBlockEnable(CurrentBlock);
+                                                      OsdConfigScaler(OsdScalerRatio);                                  
+                                                      DrawOsdMenu();
+                                              }
+                                              break;
+              
+                                      case COMD_BTCallerID:
+                                              if(!g_bCallAnswerFlg)
+                                              {
+                                                  if(!g_bBackLightFlg)
+                                                      {                                          
+                                     #ifdef BacklightEn
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 17  
+
+                                     hw_setBIASEn();
+                                     #endif
+                                     
+                                     DelayMs(100);    
+                                                         
+                                                         #ifdef BacklightEn
+                                         hw_setBacklight();
+                                             #endif
+                                                      }
+                                                      SetMenuIndex(Osd_BTCallerMenu);
+                                                      OsdBlockEnable(CurrentBlock);
+                                                      OsdConfigScaler(OsdScalerRatio);                                  
+                                                      DrawSpecialOsdMenu();
+                                              }
+                                              break;
+              
+                                      case COMD_BTCallAnswer:
+                                              printfStr("COMD_BTCallAnswer");
+                                              if(!g_bCallAnswerFlg)
+                                              {
+                                                printfStr("CALL_ANSWER");
+                                                g_bCallAnswerFlg = TRUE;
+                                                POS_UartSendCmd(CALL_ANSWER);
+                                              }
+                                              else
+                                              {
+                                                printfStr("CALL_REJECTED");
+                                                g_bCallAnswerFlg = FALSE;
+                                                POS_UartSendCmd(CALL_REJECTED);
+                                              }
+                                              break;
+              
+                                      case COMD_BTCallerDrop:
+                                               OsdBlockHide(OsdBlock2);
+                                               ResetMenuIndex();
+                                               if(g_bBackLightFlg)
+                                               {
+                                                  #ifdef BacklightEn
+                                  hw_clrBacklight(); 
+                                      #endif
+                                                      
+                                                      DelayMs(100);
+              
+                                  #ifdef BacklightEn
+                                  hw_clrBIASEn();
+                                  #endif
+                                               }
+                                              return FALSE;
+                                              break;
+                                      #endif
+1025   3      
+1026   3                          default:
+1027   3                          return FALSE;
+1028   3                          break;
+1029   3              }
+1030   2          }
+1031   1              return 1;
+1032   1      }
+1033          
+1034          void MenuProcessKey(BYTE OpratComd)
+1035          {
+1036   1              if (OpratComd)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 18  
+
+1037   1              {   
+1038   2                      if(IsPowerOff()&&(g_sysSetting.Car.status != CAR_POF_REVERSING))
+1039   2                      {   
+1040   3                  if((OpratComd!=COMD_SelPowerOnMode) && (OpratComd!=COMD_Power)&&(inputPress == g_UserInputInfo
+             -.Status))
+1041   3                              {  
+1042   4                      #ifdef FactoryEn                                
+                                                      static UCHAR  CODE  PassWord[] = PassWordBuf;
+                                                      static UCHAR  XDATA PassWordId = 0;
+                                                      static BYTE   XDATA PreOpratComd = COMD_Nothing;
+              
+                                                      if(PreOpratComd != OpratComd)
+                                                      {
+                                                         PreOpratComd = OpratComd;
+                                                         if(OpratComd == PassWord[PassWordId])
+                                                         {
+                                                           if(++PassWordId == sizeof(PassWord))
+                                                               {  
+                                                                 PassWordId = 0;
+                                                                 OpratComd = COMD_FactoryMenu;
+                                                               }
+                                                               else
+                                                               {
+                                                                  OpratComd=COMD_Nothing;
+                                                               }
+                                                         }
+                                                         else
+                                                         {
+                                                              PassWordId = 0;
+                                                              OpratComd=COMD_Nothing;
+                                                         }
+                                                      }
+                                              #else
+1069   4                                      OpratComd=COMD_Nothing;
+1070   4                      #endif 
+1071   4                              }
+1072   3                      }               
+1073   2                      if (ExectComd(OpratComd))
+1074   2                      {   
+1075   3                              g_sysSetting.Osd.dispTime= CurrentMenu->TimeOut;
+1076   3                      }
+1077   2              }
+1078   1      }
+1079          
+1080          
+1081          
+1082          
+1083          //========================================================
+1084          //               Draw Menu functions
+1085          //========================================================
+1086          
+1087          void InitOsdBlock(void)
+1088          {
+1089   1          ConfigOsdBlockStarIndexAddr();
+1090   1      }
+1091          
+1092          void InitOSD(void) 
+1093          {  
+1094   1          printfStr("InitOSD\n");
+1095   1              OsdHide();
+1096   1              OsdClear();
+1097   1              OsdCofigPalette();
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 19  
+
+1098   1              OsdIconSize(ICON_SIZE_X,ICON_SIZE_Y);
+1099   1              OsdConfigAlpha(ENABLE,OSD_BACK_BLENDING,5);
+1100   1              OsdConfigBitmapStarIndex(ICONBITMAP_SATRT_INDEX);       
+1101   1              OsdConfigBright(7);
+1102   1              #if(ICON_SIZE == SIZE_12X16)
+1103   1              DMALoadFontRam((ULONG)AMT630FontLib&0X000FFFF,0<<4,5440);  // 170
+1104   1              LoadMulCharToFontram(170,3,AMT630Font_Char);
+1105   1              LoadMulCharToFontram(173,12,KOREAN_4D3_0_12);
+1106   1              LoadMulCharToFontram(171,2,KOREAN_4D3_12_14);
+1107   1      
+1108   1              
+1109   1              #elif(ICON_SIZE == SIZE_16X22)
+                      LoadMulCharToFontram(0,3,FontRam_Char);
+                      #endif
+1112   1      }
+1113          
+1114          
+1115          /******************************************************************
+1116          *Name: void DrawOsdTitel(TitelType *pTitel)
+1117          *input:  pTitel  标题指针
+1118                   status     状态: 画状态， 选择状态， 
+1119          *output: void
+1120                
+1121          *Description: 画标题函数。
+1122          
+1123          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1124          *******************************************************************/
+1125          void DrawOsdTitel(TitelType *pTitel,UINT status) reentrant
+1126          {
+1127   1          UCHAR ucForeColor,ucBackColor;
+1128   1              
+1129   1          //printfStr("DrawOsdTitel");
+1130   1          while(1)
+1131   1          {
+1132   2               if(pTitel == NULL)
+1133   2               {
+1134   3                  break;
+1135   3               }
+1136   2                       if(status&osdDraw)
+1137   2                       {
+1138   3                               ucForeColor = pTitel->ForeColor;
+1139   3                               ucBackColor = pTitel->BackColor;
+1140   3                       }
+1141   2                       if(status&osdSel)
+1142   2                       {
+1143   3                               ucForeColor = pTitel->SelForeColor;
+1144   3                               ucBackColor = pTitel->SelBackColor;
+1145   3                       }
+1146   2                       
+1147   2                  if(pTitel->DisplayText)
+1148   2                  {
+1149   3                       OsdDrawStr(pTitel->XPos, pTitel->YPos,COLOR(ucForeColor,ucBackColor),pTitel->DisplayText());
+1150   3                  }
+1151   2                      if(pTitel->Flags & osdEnd)
+1152   2                      {
+1153   3                            break;
+1154   3                      }
+1155   2                      pTitel++;
+1156   2          }
+1157   1         
+1158   1      }
+1159          
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 20  
+
+1160          /******************************************************************
+1161          *Name: void DrawOsdIcon(IconType* pIcon,UCHAR status)
+1162          *input:  pIcon  画ICON 指针
+1163                   status     状态: 画状态， 选择状态， 
+1164          *output: void
+1165                
+1166          *Description: 画icon函数。
+1167          
+1168          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1169          *******************************************************************/
+1170          void DrawOsdIcon(IconType* pIcon,UINT status)
+1171          {
+1172   1          UCHAR XDATA ucBackColor;
+1173   1              
+1174   1          //printfStr("DrawOsdIcon");
+1175   1          while(1)
+1176   1          { 
+1177   2               if(pIcon == NULL)
+1178   2               {
+1179   3                   break;
+1180   3               }
+1181   2                       
+1182   2                       if(status&osdDraw)
+1183   2                       {
+1184   3                               ucBackColor = pIcon->BackColor;
+1185   3                       }
+1186   2                       if(status&osdSel)
+1187   2                       {
+1188   3                               ucBackColor = pIcon->SelBackColor;
+1189   3                       }
+1190   2                  if(pIcon->DispalyIcon)
+1191   2                  {   
+1192   3                      OsdDrawIcon(pIcon->XPos, pIcon->YPos,pIcon->XSize, pIcon->YSize,ucBackColor, pIcon->DispalyIcon()
+             -);
+1193   3                  }  
+1194   2                      
+1195   2                      if(pIcon->Flags & osdEnd)
+1196   2                      {
+1197   3                            break;
+1198   3                      }
+1199   2                      pIcon++;
+1200   2                      
+1201   2          }
+1202   1      }
+1203          
+1204          
+1205          /******************************************************************
+1206          *Name: void DrawOsdMenuItemNumber(DrawNumberType *pNumberItem,UCHAR status)
+1207          *input:  pNumberItem  画数字指针
+1208                   status     状态: 画状态， 选择状态， 
+1209          *output: void
+1210                
+1211          *Description: 画数字
+1212          
+1213          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1214          *******************************************************************/
+1215          void DrawOsdMenuItemNumber(DrawNumberType *pNumberItem,UINT status)
+1216          {
+1217   1          UCHAR XDATA ucForeColor,ucBackColor;
+1218   1              
+1219   1          //printfStr("DrawOsdMenuItemNumber");
+1220   1              if(pNumberItem!=NULL)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 21  
+
+1221   1              {
+1222   2                   if(status&osdDraw)
+1223   2                       {
+1224   3                               ucForeColor = pNumberItem->ForeColor;
+1225   3                               ucBackColor = pNumberItem->BackColor;
+1226   3                       }
+1227   2                       if(status&osdSel)
+1228   2                       {
+1229   3                               ucForeColor = pNumberItem->SelForeColor;
+1230   3                               ucBackColor = pNumberItem->SelBackColor;
+1231   3                       }
+1232   2                       
+1233   2                   if(pNumberItem->Flags & osdDecNum)
+1234   2                   {
+1235   3                        OsdDrawNum(pNumberItem->XPos,pNumberItem->YPos,COLOR(ucForeColor,ucBackColor),pNumberItem->GetV
+             -alue());
+1236   3                   }
+1237   2                       if(pNumberItem->Flags & osdHexNum)
+1238   2                       {
+1239   3                            OsdDrawHex(pNumberItem->XPos,pNumberItem->YPos,COLOR(ucForeColor,ucBackColor),pNumberItem->GetValu
+             -e());
+1240   3                       }
+1241   2              }
+1242   1      }
+1243          
+1244          /******************************************************************
+1245          *Name: void DrawOsdMenuItemGuage(DrawGuageType *pGaugeItem,UCHAR status)
+1246          *input:  pNumberItem  画进度条
+1247                   status     状态: 画状态， 选择状态， 
+1248          *output: void
+1249                
+1250          *Description: 画进度条
+1251          
+1252          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1253          *******************************************************************/
+1254          void DrawOsdMenuItemGuage(DrawGuageType *pGaugeItem,UINT status)
+1255          {
+1256   1          UCHAR XDATA ucForeColor,ucBackColor;
+1257   1              
+1258   1              //printfStr("DrawOsdMenuItemGuage"); 
+1259   1              if(pGaugeItem != NULL)
+1260   1              {  
+1261   2                   if(status&osdDraw)
+1262   2                       {
+1263   3                               ucForeColor = pGaugeItem->ForeColor;
+1264   3                               ucBackColor = pGaugeItem->BackColor;
+1265   3                       }
+1266   2                       if(status&osdSel)
+1267   2                       {
+1268   3                               ucForeColor = pGaugeItem->SelForeColor;
+1269   3                               ucBackColor = pGaugeItem->SelBackColor;
+1270   3                       }
+1271   2                  if(pGaugeItem->GetValue)
+1272   2                  { 
+1273   3                      OsdDrawGuage(pGaugeItem->XPos, pGaugeItem->YPos, pGaugeItem->Length, COLOR(ucForeColor,ucBackColo
+             -r),pGaugeItem->GetValue());
+1274   3                  }   
+1275   2              }
+1276   1      }
+1277            
+1278          /******************************************************************
+1279          *Name: void DrawOsdMenuItemOption(DrawOptionType *radioItem,UCHAR status)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 22  
+
+1280          *input:  pNumberItem  画选项(text)
+1281                   status     状态: 画状态， 选择状态， 
+1282          *output: void
+1283                
+1284          *Description: 画选项(text)
+1285          
+1286          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1287          *******************************************************************/
+1288          void DrawOsdMenuItemOption(DrawOptionType *pOptionItem,UINT status)
+1289          {   
+1290   1      
+1291   1          UCHAR XDATA ucForeColor,ucBackColor;
+1292   1      
+1293   1              //printfStr("DrawOsdMenuItemOption");
+1294   1              if(pOptionItem != NULL)
+1295   1              {   
+1296   2                   if(status&osdDraw)
+1297   2                       {
+1298   3                               ucForeColor = pOptionItem->ForeColor;
+1299   3                               ucBackColor = pOptionItem->BackColor;
+1300   3                       }
+1301   2                       if(status&osdSel)
+1302   2                       {
+1303   3                               ucForeColor = pOptionItem->SelForeColor;
+1304   3                               ucBackColor = pOptionItem->SelBackColor;
+1305   3                       }
+1306   2                       if(pOptionItem->DisplayText)
+1307   2                       {   
+1308   3                               OsdDrawStr(pOptionItem->XPos, pOptionItem->YPos, COLOR(ucForeColor,ucBackColor),pOptionItem->DisplayT
+             -ext());
+1309   3                       }
+1310   2              }
+1311   1      }
+1312          /******************************************************************
+1313          *Name: void DrawOsdMenuItemValue(ItemValueType* pItemValue,UINT status)
+1314          *input:  pItemValue  画ITEM 的值 包括: 数字，进度条 ，选项
+1315                   status     状态: 画状态， 选择状态， 
+1316          *output: void
+1317                
+1318          *Description: 画ITEM 的值 包括: 数字，进度条 ，选项
+1319          
+1320          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1321          *******************************************************************/
+1322          void DrawOsdMenuItemValue(ItemValueType* pItemValue,UINT status)
+1323          {
+1324   1          if(pItemValue == NULL)
+1325   1          {
+1326   2               return;
+1327   2          }
+1328   1                      
+1329   1          while(1)
+1330   1          {
+1331   2              if(pItemValue->DrawNumber)
+1332   2              {
+1333   3                  DrawOsdMenuItemNumber(pItemValue->DrawNumber,status);
+1334   3              }
+1335   2              if(pItemValue->DrawGuage)
+1336   2              {    
+1337   3                  DrawOsdMenuItemGuage(pItemValue->DrawGuage,status);
+1338   3              }
+1339   2              if(pItemValue->DrawOption)
+1340   2              {
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 23  
+
+1341   3                  DrawOsdMenuItemOption(pItemValue->DrawOption,status);
+1342   3              }
+1343   2              if(pItemValue->Flags&osdEnd)
+1344   2              {
+1345   3                      break;
+1346   3              }    
+1347   2              pItemValue++;
+1348   2          }
+1349   1      }
+1350          /******************************************************************
+1351          *Name: DrawOsdMenuItem(MenuItemType *pMenuItem,UINT status)
+1352          *input:  pMenuItem  菜单条目指针，
+1353                   status     状态: 画状态， 选择状态， 
+1354          *output: void
+1355                
+1356          *Description: 画菜单条目
+1357          
+1358          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1359          *******************************************************************/
+1360          void DrawOsdMenuItem(MenuItemType *pMenuItem,UINT status) reentrant
+1361          {
+1362   1          AdjustType  wcDrawItemCdtion;
+1363   1      
+1364   1              //首先判断画此菜单的条件。
+1365   1          if(pMenuItem->CheckCondition)
+1366   1          {
+1367   2              wcDrawItemCdtion = pMenuItem->CheckCondition();
+1368   2          }
+1369   1      
+1370   1          //判断是否有个性风格
+1371   1              if(pMenuItem->DrawItemStyle)
+1372   1              {
+1373   2                  pMenuItem->DrawItemStyle();
+1374   2              }
+1375   1      
+1376   1          if(pMenuItem->ItemIcons)
+1377   1          {   
+1378   2              DrawOsdIcon(pMenuItem->ItemIcons,status);
+1379   2          }
+1380   1              if(pMenuItem->ItemTitels)
+1381   1              {
+1382   2                      DrawOsdTitel(pMenuItem->ItemTitels,status);
+1383   2              }       
+1384   1          DrawOsdMenuItemValue(pMenuItem->ItemValue,status);
+1385   1              
+1386   1      }
+1387          
+1388          /******************************************************************
+1389          *Name: void DrawOsdMenu(void)
+1390          *input:  void
+1391          *output: void
+1392                
+1393          *Description: 画菜单
+1394          
+1395          *history: 1.Jordan.chen   2012/02/21    1.0    buil   this  function
+1396          *******************************************************************/
+1397          void DrawOsdMenu(void)
+1398          {
+1399   1          AdjustType XDATA wcDrawMenuCdtion;
+1400   1              UCHAR XDATA i;
+1401   1      
+1402   1              printfStr(CurrentMenu->MenuName);
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 24  
+
+1403   1      
+1404   1              //首先判断画此菜单的条件。
+1405   1          if(CurrentMenu->CheckCondition)
+1406   1          {
+1407   2              wcDrawMenuCdtion = CurrentMenu->CheckCondition();
+1408   2              }
+1409   1          //判断是否需要隐藏。
+1410   1              if(CurrentMenu->Flags & osdInvisible)
+1411   1              {
+1412   2                  HideMenu();
+1413   2                      //printfStr("hide osd\n");
+1414   2              }
+1415   1              else
+1416   1              {
+1417   2                  //判断是否需要初始化:重新设定大小等。。
+1418   2                  if((CurrentMenu->Flags & osdRedraw)&&(wcDrawMenuCdtion.Flags & osdVisible))
+1419   2                      {
+1420   3                      //printfStr("redraw osd menu");
+1421   3                          HideMenu();
+1422   3                              OsdBlockClear(CurrentBlock);    
+1423   3                              OsdConfigWndSize(CurrentMenu->XSize,CurrentMenu->YSize);
+1424   3                              OsdConfigWndPosition(CurrentMenu->XPos+wcDrawMenuCdtion.XPos, CurrentMenu->YPos+wcDrawMenuCdtion.YPos);
+1425   3                              OsdConfigBlockColor(COLOR(CurrentMenu->ForeColor,CurrentMenu->BackColor));                      
+1426   3                          if(CurrentMenu->DrawMenuStyle)
+1427   3                              {
+1428   4                               CurrentMenu->DrawMenuStyle();
+1429   4                              }
+1430   3                      }       
+1431   2                      
+1432   2                      if(CurrentMenu->MenuIcons)
+1433   2                      {   
+1434   3                              DrawOsdIcon(CurrentMenu->MenuIcons,osdDraw);
+1435   3                      }
+1436   2                      
+1437   2                  if(CurrentMenu->MenuTitels)
+1438   2                  {
+1439   3                      DrawOsdTitel(CurrentMenu->MenuTitels,osdDraw);
+1440   3                  }
+1441   2                      
+1442   2                      for(i=0; i<CurrentMenuItemCount; i++)
+1443   2                      {   
+1444   3                          DrawOsdMenuItem(&CurrentMenu->MenuItems[i],osdDraw);
+1445   3                      }
+1446   2                      OsdBlockShow(CurrentBlock);
+1447   2              }
+1448   1      }
+1449          
+1450          
+1451          
+1452          void DrawSpecialOsdMenu(void)
+1453          {
+1454   1          AdjustType XDATA wcDrawMenuCdtion;
+1455   1              UCHAR XDATA i;
+1456   1      
+1457   1              printfStr(CurrentMenu->MenuName);
+1458   1      
+1459   1              //首先判断画此菜单的条件。
+1460   1          if(CurrentMenu->CheckCondition)
+1461   1          {
+1462   2              wcDrawMenuCdtion = CurrentMenu->CheckCondition();
+1463   2              }
+1464   1          //判断是否需要隐藏。
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 25  
+
+1465   1              if(CurrentMenu->Flags & osdInvisible)
+1466   1              {
+1467   2                  HideMenu();
+1468   2                      printfStr("hide osd\n");
+1469   2              }
+1470   1              else
+1471   1              {
+1472   2                  //判断是否需要初始化:重新设定大小等。。
+1473   2                  if((CurrentMenu->Flags & osdRedraw)&&(wcDrawMenuCdtion.Flags & osdVisible))
+1474   2                      {
+1475   3                      printfStr("redraw special osd menu");
+1476   3                              OsdBlockClear(CurrentBlock);    
+1477   3                              OsdConfigWndSize(CurrentMenu->XSize,CurrentMenu->YSize);
+1478   3                              OsdConfigWndPosition(CurrentMenu->XPos+wcDrawMenuCdtion.XPos, CurrentMenu->YPos+wcDrawMenuCdtion.YPos);
+1479   3                              OsdConfigBlockColor(COLOR(CurrentMenu->ForeColor,CurrentMenu->BackColor));                      
+1480   3                          if(CurrentMenu->DrawMenuStyle)
+1481   3                              {
+1482   4                               CurrentMenu->DrawMenuStyle();
+1483   4                              }
+1484   3                      }       
+1485   2                      
+1486   2                      if(CurrentMenu->MenuIcons)
+1487   2                      {   
+1488   3                              DrawOsdIcon(CurrentMenu->MenuIcons,osdDraw);
+1489   3                      }
+1490   2                      
+1491   2                  if(CurrentMenu->MenuTitels)
+1492   2                  {
+1493   3                      DrawOsdTitel(CurrentMenu->MenuTitels,osdDraw);
+1494   3                  }
+1495   2                      
+1496   2                      for(i=0; i<CurrentMenuItemCount; i++)
+1497   2                      {   
+1498   3                          DrawOsdMenuItem(&CurrentMenu->MenuItems[i],osdDraw);
+1499   3                      }
+1500   2                      OsdBlockShow(CurrentBlock);
+1501   2              }
+1502   1      }
+1503          
+1504          
+1505          UCHAR GetPrevItem(void)
+1506          {
+1507   1          UCHAR XDATA ucTempItemIndex,ucPrevItemIndex;
+1508   1      
+1509   1              ucTempItemIndex = g_ucMenuItemIndex;
+1510   1          ucPrevItemIndex = g_ucMenuItemIndex;
+1511   1      
+1512   1              while(1)
+1513   1              {
+1514   2                      if(g_ucMenuItemIndex>0)
+1515   2                      {
+1516   3                           g_ucMenuItemIndex--;
+1517   3                      }
+1518   2                      else
+1519   2                      {
+1520   3                           g_ucMenuItemIndex =  CurrentMenuItemCount - 1;
+1521   3                      }
+1522   2                      if(CurrentMenuItem.Flags & osdSel)
+1523   2                      {       
+1524   3                              if(CurrentMenuItem.CheckCondition)
+1525   3                              {
+1526   4                                      if(CurrentMenuItem.CheckCondition().Flags & osdVisible)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 26  
+
+1527   4                                      {
+1528   5                                              ucPrevItemIndex = g_ucMenuItemIndex;
+1529   5                                              g_ucMenuItemIndex = ucTempItemIndex;
+1530   5                                              return ucPrevItemIndex;
+1531   5                                      } 
+1532   4                              }
+1533   3                              else
+1534   3                              {
+1535   4                                      ucPrevItemIndex = g_ucMenuItemIndex;
+1536   4                                      g_ucMenuItemIndex = ucTempItemIndex;
+1537   4                                      return ucPrevItemIndex;
+1538   4                              }
+1539   3                      }
+1540   2                      if(ucTempItemIndex == g_ucMenuItemIndex)
+1541   2                      {
+1542   3                              break;
+1543   3                      }
+1544   2              }
+1545   1          return ucPrevItemIndex;
+1546   1      }
+1547          
+1548          UCHAR GetNextItem(void)
+1549          {
+1550   1          UCHAR XDATA ucTempItemIndex,ucPrevItemIndex;
+1551   1      
+1552   1              ucTempItemIndex = g_ucMenuItemIndex;
+1553   1          ucPrevItemIndex = g_ucMenuItemIndex;
+1554   1              
+1555   1              while(1)
+1556   1              {
+1557   2                      if(g_ucMenuItemIndex<(CurrentMenuItemCount - 1))
+1558   2                      {
+1559   3                           g_ucMenuItemIndex++;  
+1560   3                      }
+1561   2                      else
+1562   2                      {
+1563   3                           g_ucMenuItemIndex =  0;
+1564   3                      }
+1565   2              
+1566   2                      if(CurrentMenuItem.Flags & osdSel)
+1567   2                      {       
+1568   3                              if(CurrentMenuItem.CheckCondition)
+1569   3                              {
+1570   4                                      if(CurrentMenuItem.CheckCondition().Flags & osdVisible)
+1571   4                                      {
+1572   5                                              ucPrevItemIndex = g_ucMenuItemIndex;
+1573   5                                              g_ucMenuItemIndex = ucTempItemIndex;
+1574   5                                              return ucPrevItemIndex;
+1575   5                                      } 
+1576   4                              }
+1577   3                              else
+1578   3                              {
+1579   4                                      ucPrevItemIndex = g_ucMenuItemIndex;
+1580   4                                      g_ucMenuItemIndex = ucTempItemIndex;
+1581   4                                      return ucPrevItemIndex;
+1582   4                              }
+1583   3                      }
+1584   2              
+1585   2                      if(ucTempItemIndex == g_ucMenuItemIndex)
+1586   2                      {
+1587   3                              break;
+1588   3                      }
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 27  
+
+1589   2              }
+1590   1          return ucPrevItemIndex;
+1591   1      }
+1592          
+1593          
+1594          UCHAR GetNextMenu(void)
+1595          {
+1596   1          UCHAR XDATA ucNextPage, ucIndex;
+1597   1              
+1598   1              ucNextPage = CurrentMenu->NextPage;
+1599   1              ucIndex = g_ucMenuPageIndex;
+1600   1      
+1601   1              //printf("ucIndex = %x", ucIndex);
+1602   1              //printf("MenuCount = %x", (MenuCount));
+1603   1                               
+1604   1          while(1)
+1605   1          {
+1606   2               if(g_ucMenuPageIndex<(MenuCount))
+1607   2               {
+1608   3                   g_ucMenuPageIndex++;
+1609   3               }
+1610   2                       else
+1611   2                       {
+1612   3                           g_ucMenuPageIndex = 0;
+1613   3                       }              
+1614   2                       if(CurrentMenu->CurrentPage == ucNextPage)
+1615   2                       { 
+1616   3                              if(CurrentMenu->Flags & osdVisible)
+1617   3                              {       
+1618   4                                      if(CurrentMenu->CheckCondition)
+1619   4                                      {
+1620   5                                              if(CurrentMenu->CheckCondition().Flags & osdVisible)
+1621   5                                              {    
+1622   6                                                   return g_ucMenuPageIndex;
+1623   6                                              } 
+1624   5                                              else
+1625   5                                              {    
+1626   6                                                   ucNextPage = CurrentMenu->NextPage;
+1627   6                                              }
+1628   5                                      }
+1629   4                                      else
+1630   4                                      {
+1631   5                                              return g_ucMenuPageIndex;
+1632   5                                      }
+1633   4                              }
+1634   3                       }       
+1635   2                       if(g_ucMenuPageIndex == ucIndex)
+1636   2                       {   
+1637   3                               SetMenuIndex(Osd_QuicklySource);                        
+1638   3                           break;
+1639   3                       }
+1640   2          }
+1641   1              return g_ucMenuPageIndex;
+1642   1      }
+1643          
+1644          UCHAR GetPreMenu(void)
+1645          {
+1646   1          UCHAR XDATA ucPrePage, ucIndex;
+1647   1              
+1648   1              ucPrePage = CurrentMenu->PrevPage;
+1649   1              ucIndex = g_ucMenuPageIndex;
+1650   1          while(1)
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 28  
+
+1651   1          {
+1652   2               if(g_ucMenuPageIndex>0)
+1653   2               {
+1654   3                   g_ucMenuPageIndex--;
+1655   3               }
+1656   2                       else
+1657   2                       {
+1658   3                           g_ucMenuPageIndex = (MenuCount-1);
+1659   3                       }
+1660   2                       if(CurrentMenu->CurrentPage == ucPrePage)
+1661   2                       {
+1662   3                               if(CurrentMenu->Flags & osdVisible)
+1663   3                               {      
+1664   4                                      if(CurrentMenu->CheckCondition)
+1665   4                                      {
+1666   5                                              if(CurrentMenu->CheckCondition().Flags & osdVisible)
+1667   5                                              {
+1668   6                                                      return g_ucMenuPageIndex;
+1669   6                                              } 
+1670   5                                              else
+1671   5                                              {
+1672   6                                                   ucPrePage = CurrentMenu->PrevPage;
+1673   6                                              }
+1674   5                                      }
+1675   4                                      else
+1676   4                                      {
+1677   5                                          return g_ucMenuPageIndex;
+1678   5                                      }
+1679   4                               }
+1680   3                       }
+1681   2                       
+1682   2                       if(g_ucMenuPageIndex == ucIndex)
+1683   2                       {
+1684   3                           break;
+1685   3                       }
+1686   2          }
+1687   1              return g_ucMenuPageIndex;
+1688   1      }
+1689          
+1690          UCHAR FindMenuPageIndex(UCHAR menuPage)
+1691          {
+1692   1          UCHAR XDATA i=0;
+1693   1              
+1694   1          //printf("menu count = %x", (MenuCount));
+1695   1          
+1696   1              for(i=0;i<MenuCount;i++)
+1697   1              {
+1698   2                    if((tblMenus[i]->CurrentPage) == menuPage)
+1699   2                    {
+1700   3                         return i;
+1701   3                    }
+1702   2              }
+1703   1              return 0;
+1704   1      }
+1705          
+1706          void ConfigOsdBlockStarIndexAddr(void)
+1707          {
+1708   1           UCHAR XDATA i;
+1709   1               UINT  XDATA Block0MaxSize=0;
+1710   1               UINT  XDATA Block1MaxSize=0;
+1711   1               UINT  XDATA Block2MaxSize=0;
+1712   1               UINT  XDATA Block3MaxSize=0;
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 29  
+
+1713   1               UINT  XDATA Block4MaxSize=0;
+1714   1               
+1715   1           for(i=0;i<MenuCount;i++)
+1716   1           {
+1717   2                switch(tblMenus[i]->OsdBlockId)
+1718   2                {
+1719   3                      case OsdBlock0:
+1720   3                                              if(Block0MaxSize<(tblMenus[i]->XSize*tblMenus[i]->YSize))
+1721   3                                              {
+1722   4                                                  Block0MaxSize = tblMenus[i]->XSize*tblMenus[i]->YSize;
+1723   4                                              }
+1724   3                                              break;
+1725   3                                      case OsdBlock1:
+1726   3                                              if(Block1MaxSize<(tblMenus[i]->XSize*tblMenus[i]->YSize))
+1727   3                                              {
+1728   4                                                  Block1MaxSize = tblMenus[i]->XSize*tblMenus[i]->YSize;
+1729   4                                              }
+1730   3                                              break;
+1731   3                                      case OsdBlock2:
+1732   3                                              if(Block2MaxSize<(tblMenus[i]->XSize*tblMenus[i]->YSize))
+1733   3                                              {
+1734   4                                                  Block2MaxSize = tblMenus[i]->XSize*tblMenus[i]->YSize;
+1735   4                                              }
+1736   3                                              break;
+1737   3                                      case OsdBlock3:
+1738   3                                              if(Block3MaxSize<(tblMenus[i]->XSize*tblMenus[i]->YSize))
+1739   3                                              {
+1740   4                                                  Block3MaxSize = tblMenus[i]->XSize*tblMenus[i]->YSize;
+1741   4                                              }
+1742   3                                              break;
+1743   3                                      case OsdBlock4:
+1744   3                                              if(Block4MaxSize<(tblMenus[i]->XSize*tblMenus[i]->YSize))
+1745   3                                              {
+1746   4                                                  Block4MaxSize = tblMenus[i]->XSize*tblMenus[i]->YSize;
+1747   4                                              }
+1748   3                                              break;
+1749   3                                              
+1750   3                                      default:
+1751   3                                              break;
+1752   3                }
+1753   2           }
+1754   1               if((Block0MaxSize+Block1MaxSize+Block2MaxSize+Block3MaxSize+Block4MaxSize)<OsdIndexRamSize)
+1755   1               {
+1756   2                       g_OsdContrller.block0Size = Block0MaxSize;
+1757   2                       g_OsdContrller.block1Size = Block1MaxSize;
+1758   2                       g_OsdContrller.block2Size = Block2MaxSize;
+1759   2                       g_OsdContrller.block3Size = Block3MaxSize;
+1760   2                       g_OsdContrller.block4Size = Block4MaxSize;
+1761   2      
+1762   2                       //printf("g_OsdContrller.block0Size = %d", g_OsdContrller.block0Size);
+1763   2                       //printf("g_OsdContrller.block1Size = %d", g_OsdContrller.block1Size);
+1764   2                       //printf("g_OsdContrller.block2Size = %d", g_OsdContrller.block2Size);
+1765   2                       //printf("g_OsdContrller.block3Size = %d", g_OsdContrller.block3Size);
+1766   2                   //printf("g_OsdContrller.block4Size = %d", g_OsdContrller.block4Size);
+1767   2                      
+1768   2                   OsdConfigBlockIndexStarAddr(OsdBlock1,Block0MaxSize);
+1769   2                       OsdConfigBlockIndexStarAddr(OsdBlock2,Block0MaxSize+Block1MaxSize);
+1770   2                       OsdConfigBlockIndexStarAddr(OsdBlock3,Block0MaxSize+Block1MaxSize+Block2MaxSize);
+1771   2                       OsdConfigBlockIndexStarAddr(OsdBlock4,Block0MaxSize+Block1MaxSize+Block2MaxSize+Block3MaxSize);
+1772   2           }
+1773   1               else
+1774   1               {
+C51 COMPILER V9.51   OSD_MENU                                                              09/08/2019 13:51:55 PAGE 30  
+
+1775   2                   printfStr("Osd Block Size Error!!!!");
+1776   2                       printfStr("block all size add > 512");
+1777   2               }
+1778   1              
+1779   1               
+1780   1      }
+1781          
+1782          void HideMenu(void)
+1783          {
+1784   1          OsdHide();
+1785   1              OsdColorChangeSwitch(OFF);
+1786   1      }
+1787          
+1788          void ResetMenuIndex(void)
+1789          {
+1790   1          SetMenuIndex(Osd_RootMenu);
+1791   1              g_ucMenuPageIndex = 0;
+1792   1          g_ucOsdEixt = OsdMenu|OsdSource|OsdBrightness|OsdContrast|OsdSaturation|OsdVolume|OsdMode|OsdSys;
+1793   1      }
+1794          
+1795          
+1796          void SetMenuIndex(UCHAR menuPage)
+1797          {
+1798   1              if(FindMenuPageIndex(menuPage) != g_ucMenuPageIndex) 
+1799   1              {   
+1800   2                      g_ucMenuPageIndex = FindMenuPageIndex(menuPage);
+1801   2                      g_ucMenuItemIndex = 0;
+1802   2              }
+1803   1      }
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  1 ERROR(S)
